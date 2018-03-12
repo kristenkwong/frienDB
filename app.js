@@ -12,13 +12,18 @@ var app = express();
 
 // Set up mongoose connection
 // TODO: REPLACE WITH POSTGRES CONNECTION
+
+// Import mongoose module
 var mongoose = require('mongoose');
+// Set up default mongoose connection
 var mongoDB = 'mongodb://cooluser:coolpassword@ds012538.mlab.com:12538/friendb';
 mongoose.connect(mongoDB);
+// Get Mongoose to use the global promise library
 mongoose.Promise = global.Promise;
+// Get the default connection
 var db = mongoose.connection;
+// Bind connection to error event (to get notifications of errors)
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-// this creates the default connection to the database and binds to the error event (so the errors will print to th econsole)
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
