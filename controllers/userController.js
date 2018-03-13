@@ -23,7 +23,13 @@ exports.index = function(req, res) {
 
 // Display list of all Users.
 exports.user_list = function(req, res) {
-  res.send('NOT IMPLEMENTED: User list');
+  // TODO change to SQL from NoSQL
+  User.find({}, 'first_name family_name')
+  .exec(function(err, list_authors) {
+    if (err) {return next(err);}
+    // Successful, so render
+    res.render('user_list', { title: 'User List', user_list: list_authors});
+  });
 };
 
 // Display detail page for a specific User.

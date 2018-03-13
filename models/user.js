@@ -20,14 +20,14 @@ var UserSchema = new Schema ({
 UserSchema
 .virtual('name')
 .get(function() {
-  return this.first_name + ' ' + this.family_name;
+  return this.first_name;
 });
 
 // Virtual for User's URL
 UserSchema
 .virtual('url')
 .get(function() {
-  return '/users/' + this._id;
+  return '/home/user/' + this._id;
 });
 
 // Export model
