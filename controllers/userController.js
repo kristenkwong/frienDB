@@ -34,7 +34,23 @@ exports.user_list = function(req, res) {
 
 // Display detail page for a specific User.
 exports.user_detail = function(req, res) {
-  res.send('NOT IMPLEMENTED: User detail page: ' + req.params.id);
+  async.parallel({
+    user: function(callback) {
+      User.findById(req.params.id).exec(callback);
+    },
+    posts: function(callback) {
+      Post.find({'user': req.params.id}, 'date').exec(callback);
+    },
+  }, function(err, results) {
+    if (err) {return next(err);} //error in api usage
+    if (results.user == null) {
+      var err = new Error('User not found');
+      err.status = 404;
+      return next(err);
+    }
+    // Successful, so render
+    res.render('user_detail', {title: results.user.name, user: results.user, user_posts: results.posts});
+  });
 };
 
 // Display User create form on GET

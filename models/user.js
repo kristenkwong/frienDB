@@ -1,6 +1,8 @@
 // TODO: remove mongoose
 var mongoose = require('mongoose');
 
+var moment = require('moment'); // this is for date formatting
+
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema ({
@@ -20,7 +22,8 @@ var UserSchema = new Schema ({
 UserSchema
 .virtual('name')
 .get(function() {
-  return this.first_name;
+  var full_name = this.first_name + ' ' + this.family_name;
+  return full_name;
 });
 
 // Virtual for User's URL
@@ -28,6 +31,12 @@ UserSchema
 .virtual('url')
 .get(function() {
   return '/home/user/' + this._id;
+});
+
+UserSchema
+.virtual('birthday_formatted')
+.get(function() {
+  return moment(this.birthdate).format('MMMM D');
 });
 
 // Export model
