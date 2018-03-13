@@ -1,8 +1,24 @@
 var User = require('../models/user');
+var Tag = require('../models/tag');
+var Post = require('../models/post')
+
+var async = require('async');
 
 // Display index of site
 exports.index = function(req, res) {
-  res.send('NOT IMPLEMENTED: Site Home Page');
+  async.parallel({
+    user_count: function(callback) {
+      User.count(callback);
+    },
+    tag_count: function(callback) {
+      Tag.count(callback);
+    },
+    post_count: function(callback) {
+      Post.count(callback);
+    },
+  }, function(err, results) {
+    res.render('index', { title: 'FrienDB Home', error: err, data: results });
+  });
 };
 
 // Display list of all Users.
