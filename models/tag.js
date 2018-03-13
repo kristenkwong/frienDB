@@ -10,7 +10,7 @@ var TagSchema = new Schema ({
 TagSchema
 .virtual('url')
 .get(function() {
-  return '/tag/' + this.text;
+  return '/home/tag/' + this._id;
 })
 
 // Export model
