@@ -2,7 +2,9 @@ var Tag = require('../models/tag');
 
 // Display list of all Tags.
 exports.tag_list = function(req, res) {
-  Tag.find().exec(function(err, list_tags) {
+  Tag.find()
+  .sort([['text', 'ascending']])
+  .exec(function(err, list_tags) {
     if (err) {return next(err);}
     // Successful, so render
     res.render('tag_list', {title: 'Tag List', tag_list: list_tags});

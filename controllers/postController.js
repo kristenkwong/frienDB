@@ -2,7 +2,14 @@ var Post = require('../models/post');
 
 // Display list of all Post.
 exports.post_list = function(req, res) {
-  res.send('NOT IMPLEMENTED: Post list');
+  Post.find()
+  .populate('user')
+  .sort([['date', 'descending']])
+  .exec(function(err, list_posts) {
+    if (err) {return next(err)};
+    // Successful, so render
+    res.render('post_list', {title: 'Post List', post_list: list_posts});
+  });
 };
 
 // Display detail page for a specific Post.

@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1= title
+
+  ul
+  each post in post_list
+    li
+      a(href=post.url) Post by #{post.user.name} at #{post.date}
+
+  else
+    li There are no books.
