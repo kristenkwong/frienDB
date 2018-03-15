@@ -1,0 +1,11 @@
+extends layout
+
+block content
+
+  h1 ID: #{post._id}
+
+  p #[strong Posted by: ]
+    a(href=post.user.url) #{post.user.name}
+  p #[strong Time: ] #{post.time}
+
+  

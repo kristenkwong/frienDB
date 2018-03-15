@@ -1,0 +1,44 @@
+extends layout
+
+block content
+  h1= title
+
+  form(method='POST' action='')
+    div.form-group
+      label(for='email') Email:
+      input#email.form-control(type='text', name='email', required='true', value=(undefined===user ? '' : user.email))
+
+      label(for='password') Password:
+      input#password.form-control(type='password', name='password', required='true', value=(undefined===user ? '' : user.password))
+
+    div.form-group
+
+      label(for='first_name') First Name:
+      input#first_name.form-control(type='text', name='first_name', required='true', value=(undefined===user ? '' : user.first_name))
+
+      label(for='family_name') Last Name:
+      input#family_name.form-control(type='text', name='family_name', required='true', value=(undefined===user ? '' : user.family_name))
+
+      label(for='birthdate') Birthdate:
+      input#birthdate.form-control(type='date', name='birthdate', required='true', value=(undefined===user ? '' : user.birthdate))
+
+      label(for='gender') Gender:
+      select#gender.form-control(type='select', placeholder='Select a gender', name='gender', required='false')
+        option -- Gender --
+        option(value="Female") Female
+        option(value="Male") Male
+        option(value="Other") Other
+
+      Location
+      label(for='city') City:
+      input#city.form-control(type='text', name='city', required='false', value=(undefined===user ? '' : user.first_name))
+      label(for='country') Country:
+      input#country.form-control(type='text', name='country', required='false', value=(undefined===user ? '' : user.first_name))
+
+    button.btn.btn-primary(type='submit') Sign me up, Scotty! 👽
+
+  br
+  if errors
+    ul
+      for error in errors
+        li!= error.msg

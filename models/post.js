@@ -1,6 +1,7 @@
 // TODO replace with postgres
 
 var mongoose = require('mongoose');
+var moment = require('moment');
 
 var Schema = mongoose.Schema;
 
@@ -15,6 +16,12 @@ PostSchema
 .virtual('url')
 .get(function() {
   return '/home/post/' + this._id;
+})
+
+PostSchema
+.virtual('time')
+.get(function() {
+  return moment(this.date).format('MMMM Do, YYYY @ h:mma');
 })
 
 module.exports = mongoose.model('Post', PostSchema);

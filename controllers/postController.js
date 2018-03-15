@@ -1,5 +1,8 @@
 var Post = require('../models/post');
 
+const {body, validationResult} = require('express-validator/check');
+const {sanitizeBody} = require('express-validator/filter');
+
 // Display list of all Post.
 exports.post_list = function(req, res) {
   Post.find()
@@ -14,18 +17,29 @@ exports.post_list = function(req, res) {
 
 // Display detail page for a specific Post.
 exports.post_detail = function(req, res) {
-  res.send('NOT IMPLEMENTED: Post detail page: ' + req.params.id);
+  Post.findById(req.params.id)
+  .populate('user')
+  .exec(function(err, post) {
+    if (err) { return next(err); }
+    if (post == null) { //no results
+      var err = new Error('Post not found.')
+      err.status = 404;
+      return next(err);
+    }
+    // Successful, so render
+    res.render('post_detail', {title: 'Post', post: post})
+  })
 };
 
 // Display Post create form on GET
 exports.post_create_get = function(req, res) {
-  res.send('NOT IMPLEMENTED: Post create GET')
+  res.render('post_form', {title: 'Create Post'});
 };
 
 // Handle Post create for on POST
-exports.post_create_post = function(req, res) {
-  res.send('NOT IMPLEMENTED: Post create POST');
-};
+exports.post_create_post = [
+
+]
 
 // Display Post delete form on GET
 exports.post_delete_get = function(req,res) {

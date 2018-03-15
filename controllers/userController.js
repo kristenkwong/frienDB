@@ -4,6 +4,9 @@ var Post = require('../models/post')
 
 var async = require('async');
 
+const {body, validationResult} = require('express-validator/check');
+const {sanitizeBody} = require('express-validator/filter');
+
 // Display index of site
 exports.index = function(req, res) {
   async.parallel({
@@ -55,13 +58,53 @@ exports.user_detail = function(req, res) {
 
 // Display User create form on GET
 exports.user_create_get = function(req, res) {
-  res.send('NOT IMPLEMENTED: User create GET')
+  res.render('user_form', {title: 'Create New User'});
 };
 
 // Handle User create for on POST
-exports.user_create_post = function(req, res) {
-  res.send('NOT IMPLEMENTED: User create POST');
-};
+exports.user_create_post = [
+  // Validate fields
+  body('email').isLength({min:1}).trim().withMessage('Email is required.').isEmail().withMessage('Must be a valid email'),
+  body('password').isLength({min:1}).withMessage('Password is required'),
+  body('first_name').isLength({min:1}).trim().withMessage('First name is required.'),
+  body('family_name').isLength({min:1}).trim().withMessage('Last name is required.'),
+  body('birthdate', 'Invalid date of birth.').optional({checkFalsy: true}).isISO8601(),
+
+  // Sanitize fields
+  sanitizeBody('email').trim().escape(),
+  sanitizeBody('first_name').trim().escape(),
+  sanitizeBody('family_name').trim().escape(),
+  sanitizeBody('birthdate').toDate(),
+
+  // Process request after validation and sanitization
+  (req, res, next) => {
+    // Extract the validation errors from a request
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/error messages.
+      res.render('user_form', {title: 'Create New User', user: req.body, errors: errors.array()});
+      return;
+    }
+    else {
+      // Data from form is valid.
+
+      var user = new User ({
+        email: req.body.email,
+        password: req.body.password,
+        first_name: req.body.first_name,
+        family_name: req.body.family_name,
+        birthdate: req.body.birthdate
+      });
+
+      user.save(function(err) {
+        if (err) {return next(err);}
+        // Successful - redirect to next user record
+        res.redirect(user.url);
+      })
+    }
+  }
+];
 
 // Display User delete form on GET
 exports.user_delete_get = function(req,res) {

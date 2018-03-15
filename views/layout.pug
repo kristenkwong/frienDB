@@ -13,7 +13,7 @@ html(lang='en')
       div(class='row')
         div(class='col-sm-2')
           block sidebar
-            ul(class='sidebar-nav')
+            ul(class='sidebar-nav' data-spy="affix")
               li
                 a(href='/home') Home
               li
@@ -26,8 +26,6 @@ html(lang='en')
                 hr
               li
                 a(href='/home/user/create') Create new user
-              li
-                a(href='/home/tag/create') Create new tag
               li
                 a(href='/home/post/create') Create new post
 
