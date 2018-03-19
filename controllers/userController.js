@@ -1,8 +1,11 @@
 var User = require('../models/user');
 var Tag = require('../models/tag');
 var Post = require('../models/post')
+const {Client} = require('pg'); //newer version of Javascript to get the client
 
 var async = require('async');
+var dotenv = require('dotenv');
+dotenv.load();
 
 const {body, validationResult} = require('express-validator/check');
 const {sanitizeBody} = require('express-validator/filter');
@@ -89,19 +92,42 @@ exports.user_create_post = [
     else {
       // Data from form is valid.
 
-      var user = new User ({
-        email: req.body.email,
-        password: req.body.password,
-        first_name: req.body.first_name,
-        family_name: req.body.family_name,
-        birthdate: req.body.birthdate
-      });
+      // insert into database
+      // 1. connect to database
+      // 2. send a query
+      // 3. do the database thingy
+      // 4. profit???
 
-      user.save(function(err) {
-        if (err) {return next(err);}
-        // Successful - redirect to next user record
-        res.redirect(user.url);
-      })
+      const client = new Client(); //uses env settings to connect
+      client.connect()
+        .then(()=> {
+          console.log('connection complete');
+          // do query stuff
+
+          //TODO need to check if city/country combinations are in location
+          // if not, add tuples into location table as well
+
+
+          const sql = 'INSERT INTO users (email, password, first_name, family_name, birthdate, born_city, born_country, lives_city, lives_country) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)';
+          const params = [req.body.email, req.body.password, req.body.first_name, req.body.family_name, req.body.birthdate, req.body.born_city, req.body.born_country, req.body.lives_city, req.body.lives_country];
+
+          // this thing checks if any of the form values are empty
+          // if they are empty, set them to null to avoid broke constraints in db
+          for (i = 0; i < params.length; i++) {
+            if (params[i] == '') {
+              params[i] = null;
+            }
+          }
+
+          console.log(params);
+          return client.query(sql, params);
+        })
+        .then((result) => {
+          console.log('result?', result);
+          res.redirect('/');
+          //TODO need to redirect to the user's page
+          // res.redirect(user.url);
+        })
     }
   }
 ];

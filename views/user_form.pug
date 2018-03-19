@@ -29,11 +29,17 @@ block content
         option(value="Male") Male
         option(value="Other") Other
 
-      Location
-      label(for='city') City:
-      input#city.form-control(type='text', name='city', required='false', value=(undefined===user ? '' : user.first_name))
-      label(for='country') Country:
-      input#country.form-control(type='text', name='country', required='false', value=(undefined===user ? '' : user.first_name))
+      h3 Location Born
+      label(for='born_city') City:
+      input#born_city.form-control(type='text', name='born_city', value=(undefined===user ? '' : user.born_city))
+      label(for='born_country') Country:
+      input#born_country.form-control(type='text', name='born_country', value=(undefined===user ? '' : user.born_country))
+
+      h3 Current Location
+      label(for='lives_city') City:
+      input#lives_city.form-control(type='text', name='lives_city', value=(undefined===user ? '' : user.lives_city))
+      label(for='born_country') Country:
+      input#lives_country.form-control(type='text', name='lives_country', value=(undefined===user ? '' : user.lives_country))
 
     button.btn.btn-primary(type='submit') Sign me up, Scotty! 👽
 

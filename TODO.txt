@@ -1,2 +1,6 @@
 TODO LIST:
 - remove mongoose in package.json after switching to postgres
+
+Kristen:
+[] working on deploying to Heroku
+[] linking to PostgreSQL

@@ -11,6 +11,9 @@ var home = require('./routes/home'); //Import routes for "catalog" area of site
 
 var app = express();
 
+//require('dotenv').config();
+
+ /* THIS IS FOR MONGOOSE */
 // Set up mongoose connection
 // TODO: REPLACE WITH POSTGRES CONNECTION
 
@@ -25,6 +28,8 @@ mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 // Bind connection to error event (to get notifications of errors)
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -41,6 +46,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 //app.use('/users', users);
 app.use('/home', home);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

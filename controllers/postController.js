@@ -1,4 +1,4 @@
-var Post = require('../models/post');
+//var Post = require('../models/post'); this was for mongo
 
 const {body, validationResult} = require('express-validator/check');
 const {sanitizeBody} = require('express-validator/filter');
