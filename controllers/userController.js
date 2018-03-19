@@ -25,22 +25,31 @@ exports.index = function(req, res) {
   }, function(err, results) {
     res.render('index', { title: 'FrienDB Home', error: err, data: results });
   });
+
+  // when rendering, we need title, error, and data
 };
 
 // Display list of all Users.
 exports.user_list = function(req, res) {
-  // TODO change to SQL from NoSQL
-  User.find({}, 'first_name family_name')
-  .exec(function(err, list_authors) {
-    if (err) {return next(err);}
-    // Successful, so render
-    res.render('user_list', { title: 'User List', user_list: list_authors});
-  });
+
+  const client = new Client();
+  client.connect() //this is async so we need promises
+    .then(() => {
+      return client.query('SELECT * FROM users');
+    })
+    .then((results) => {
+      console.log('results?', results);
+      res.render('user_list', {title: 'User List', user_list: results.rows});
+    })
+    .catch((err) => {
+      console.log('error', err);
+      res.send('Something bad happened');
+    })
 };
 
 // Display detail page for a specific User.
 exports.user_detail = function(req, res) {
-  async.parallel({
+  /* async.parallel({
     user: function(callback) {
       User.findById(req.params.id).exec(callback);
     },
@@ -56,7 +65,7 @@ exports.user_detail = function(req, res) {
     }
     // Successful, so render
     res.render('user_detail', {title: results.user.name, user: results.user, user_posts: results.posts});
-  });
+  });*/
 };
 
 // Display User create form on GET
@@ -134,7 +143,7 @@ exports.user_create_post = [
 
 // Display User delete form on GET
 exports.user_delete_get = function(req,res) {
-  res.send('NOT IMPLEMENTED: User delete GET');
+  //res.send('NOT IMPLEMENTED: User delete GET');
 };
 
 // Handle User delete form on POST
