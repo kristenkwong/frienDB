@@ -6,4 +6,8 @@ router.get('/', function(req, res) {
   res.redirect('/home');
 });
 
+router.get('/home/statistics', function(req, res) {
+  res.render('statistics', {title: 'Site Statistics'});
+})
+
 module.exports = router;

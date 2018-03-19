@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  h1= title
+
+  form(method='POST' action='')
+    div.form-group
+      label(for='text') Text:
+      input#text.form-control(type='text', name='text', required='false', value=(undefined===post ? '' : post.text))
+
+      label(for='image') Image link:
+      input#text.form-control(type='url', name='image', required='false', value='https://')
+
+      h3 Location:
+      label(for='City') City:
+      input#text.form-control(type='text', name='city', required='false')
+      label(for='Country') Country:
+      input#text.form-control(type='text', name='country', required='false')
+
+    button.btn.btn-primary(type='submit') Post it!
+
+  br
+  if errors
+    ul
+      for error in errors
+        li!= error.msg
