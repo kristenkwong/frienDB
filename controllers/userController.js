@@ -32,9 +32,14 @@ exports.index = function(req, res) {
 // Display list of all Users.
 exports.user_list = function(req, res) {
 
-  const client = new Client();
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
+  console.log(process.env.DATABASE_URL);
   client.connect() //this is async so we need promises
     .then(() => {
+      console.log("connected");
       return client.query('SELECT * FROM users');
     })
     .then((results) => {
@@ -45,10 +50,23 @@ exports.user_list = function(req, res) {
       console.log('error', err);
       res.send('Something bad happened');
     })
+
 };
 
 // Display detail page for a specific User.
 exports.user_detail = function(req, res) {
+
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
+  console.log(process.env.DATABASE_URL);
+  client.connect()
+    .then(()=> {
+      return client.query('SELECT * FROM users WHERE username=')
+    })
+
+
   /* async.parallel({
     user: function(callback) {
       User.findById(req.params.id).exec(callback);
@@ -107,7 +125,11 @@ exports.user_create_post = [
       // 3. do the database thingy
       // 4. profit???
 
-      const client = new Client(); //uses env settings to connect
+      const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: true
+      });
+      console.log(process.env.DATABASE_URL); //uses env settings to connect
       client.connect()
         .then(()=> {
           console.log('connection complete');
@@ -143,12 +165,32 @@ exports.user_create_post = [
 
 // Display User delete form on GET
 exports.user_delete_get = function(req,res) {
-  //res.send('NOT IMPLEMENTED: User delete GET');
+  res.send('NOT IMPLEMENTED: User delete GET')
 };
 
 // Handle User delete form on POST
 exports.user_delete_post = function(req, res) {
-  res.send('NOT IMPLEMENTED: User delete POST');
+  console.log('deleting id', req.params.id);
+
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
+  console.log(process.env.DATABASE_URL);
+  client.connect()
+    .then(()=> {
+      const sql = 'DELETE FROM books WHERE email = $1';
+      const params = [req.params.id]
+      return client.query(sql, params);
+    })
+    .then((results) => {
+      console.log('delete results', results);
+      res.redirect('/users')
+    })
+    .catch(()=> {
+      console.log('err', err);
+      res.redirect('/books');
+    });
 };
 
 // Display User update form on GET
