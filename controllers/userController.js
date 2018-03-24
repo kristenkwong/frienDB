@@ -59,6 +59,12 @@ exports.user_list = function(req, res) {
 // Display detail page for a specific User.
 exports.user_detail = function(req, res) {
 
+  var result = {};
+  result.user_result = [];
+  result.post_result = [];
+
+  console.log("RETRIEVING DETAILS FOR " + req.params.id);
+
   const client = new Client({
     connectionString: process.env.DATABASE_URL,
     ssl: true
@@ -66,13 +72,19 @@ exports.user_detail = function(req, res) {
 
   client.connect()
     .then(()=> {
-      const sql = 'SELECT * FROM users WHERE user_id = $1;'
+      const sql = 'SELECT * FROM users WHERE username = $1;';
       const params = [req.params.id];
       return client.query(sql, params);
     })
     .then ((results) => {
-      console.log('results?', results);
+      console.log(results.rows[0])
+      result.user_result.push(results.rows[0]);
     })
+    .then(() => {
+      console.log('results??', result.user_result);
+      res.render('user_detail', {title: req.params.id, user: result.user_result[0]})
+    })
+
 
 
   /* async.parallel({
@@ -102,16 +114,16 @@ exports.user_create_get = function(req, res) {
 // Handle User create for on POST
 exports.user_create_post = [
   // Validate fields
-  body('email').isLength({min:1}).trim().withMessage('Email is required.').isEmail().withMessage('Must be a valid email'),
+  body('username').isLength({min:1}).trim().withMessage('Username is required.'),
   body('password').isLength({min:1}).withMessage('Password is required'),
   body('first_name').isLength({min:1}).trim().withMessage('First name is required.'),
-  body('family_name').isLength({min:1}).trim().withMessage('Last name is required.'),
+  body('last_name').isLength({min:1}).trim().withMessage('Last name is required.'),
   body('birthdate', 'Invalid date of birth.').optional({checkFalsy: true}).isISO8601(),
 
   // Sanitize fields
-  sanitizeBody('email').trim().escape(),
+  sanitizeBody('username').trim().escape(),
   sanitizeBody('first_name').trim().escape(),
-  sanitizeBody('family_name').trim().escape(),
+  sanitizeBody('last_name').trim().escape(),
   sanitizeBody('birthdate').toDate(),
 
   // Process request after validation and sanitization
@@ -148,8 +160,8 @@ exports.user_create_post = [
 
 
           // sql to insert new user into db
-          const sql = 'INSERT INTO users (email, password, first_name, family_name, birthdate, born_city, born_country, lives_city, lives_country) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)';
-          const params = [req.body.email, req.body.password, req.body.first_name, req.body.family_name, req.body.gender, req.body.birthdate, req.body.born_city, req.body.born_country, req.body.lives_city, req.body.lives_country];
+          const sql = 'INSERT INTO users (username, password, first_name, last_name, birthdate, born_city, born_country, lives_city, lives_country) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)';
+          const params = [req.body.username, req.body.password, req.body.first_name, req.body.last_name, req.body.gender, req.body.birthdate, req.body.born_city, req.body.born_country, req.body.lives_city, req.body.lives_country];
 
           // this thing checks if any of the form values are empty
           // if they are empty, set them to null to avoid broke constraints in db
@@ -164,9 +176,8 @@ exports.user_create_post = [
         })
         .then((result) => {
           console.log('result?', result);
-          res.redirect('/');
           //TODO need to redirect to the new user's detail page
-          res.redirect(user.url);
+          res.redirect('/user/' + req.body.username);
         })
     }
   }

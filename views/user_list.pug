@@ -5,9 +5,8 @@ block content
 
   ul
   each user in user_list
-    - var url = "/user/" + user.userId
     li
-      a(href="/user/" + user.userId) #{user.first_name} #{user.family_name}
+      a(href="/home/user/" + user.username) #{user.first_name} #{user.last_name}
 
   else
     li There are no users.

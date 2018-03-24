@@ -5,8 +5,8 @@ block content
 
   form(method='POST' action='')
     div.form-group
-      label(for='email') Email:
-      input#email.form-control(type='text', name='email', required='true', value=(undefined===user ? '' : user.email))
+      label(for='username') Email:
+      input#email.form-control(type='text', name='username', required='true', value=(undefined===user ? '' : user.username))
 
       label(for='password') Password:
       input#password.form-control(type='password', name='password', required='true', value=(undefined===user ? '' : user.password))
@@ -16,14 +16,14 @@ block content
       label(for='first_name') First Name:
       input#first_name.form-control(type='text', name='first_name', required='true', value=(undefined===user ? '' : user.first_name))
 
-      label(for='family_name') Last Name:
-      input#family_name.form-control(type='text', name='family_name', required='true', value=(undefined===user ? '' : user.family_name))
+      label(for='last_name') Last Name:
+      input#family_name.form-control(type='text', name='last_name', required='true', value=(undefined===user ? '' : user.last_name))
 
       label(for='birthdate') Birthdate:
-      input#birthdate.form-control(type='date', name='birthdate', required='true', value=(undefined===user ? '' : user.birthdate))
+      input#birthdate.form-control(type='date', name='birthdate', value=(undefined===user ? '' : user.birthdate))
 
       label(for='gender') Gender:
-      select#gender.form-control(type='select', placeholder='Select a gender', name='gender', required='false')
+      select#gender.form-control(type='select', placeholder='Select a gender', name='gender')
         option -- Gender --
         option(value="Female") Female
         option(value="Male") Male

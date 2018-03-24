@@ -1,5 +1,7 @@
 /* To run this file in Heroku Postgres, use the following command:
-heroku pg:psql postgresql-rugged-11349 < init_db.sql */
+heroku pg:psql postgresql-rugged-11349 < init_db.sql
+
+This script drops all tables and creates new ones with sample values*/
 
 DROP TABLE friends_with;
 DROP TABLE text_post;
@@ -20,6 +22,8 @@ CREATE TABLE location (
 CREATE TABLE users (
   username VARCHAR(20) NOT NULL, -- decided to do this to get a URL
   password VARCHAR(25) NOT NULL,
+  first_name VARCHAR (30) NOT NULL,
+  last_name VARCHAR (30) NOT NULL,
   gender VARCHAR(10), -- male, female, other
   birthdate DATE,
   born_city VARCHAR(30),
@@ -105,15 +109,15 @@ INSERT INTO location VALUES (
 );
 
 INSERT INTO users VALUES (
-  'kristen', 'hello', 'Female', '1997-02-05', 'Richmond', 'Canada', 'Vancouver', 'Canada'
+  'kristen', 'hello', 'Kristen', 'Kwong', 'Female', '1997-02-05', 'Richmond', 'Canada', 'Vancouver', 'Canada'
 );
 
 INSERT INTO users VALUES (
-  'victor', 'password', 'Male', '1997-03-29', 'Hong Kong', 'Hong Kong', 'Richmond', 'Canada'
+  'victor', 'password', 'Victor', 'Tang', 'Male', '1997-03-29', 'Hong Kong', 'Hong Kong', 'Richmond', 'Canada'
 );
 
 INSERT INTO users VALUES (
-  'anthea', 'hi', 'Female', '2000-12-20', 'Richmond', 'Canada', null, null
+  'anthea', 'hi', 'Anthea', 'Kwong', 'Female', '2000-12-20', 'Richmond', 'Canada', null, null
 );
 
 INSERT INTO post (username, post_date, city, country) VALUES (
@@ -123,3 +127,5 @@ INSERT INTO post (username, post_date, city, country) VALUES (
 INSERT INTO post (username, post_date, city, country) VALUES (
   'kristen', '2018-03-29', 'Richmond', 'Canada'
 );
+
+/* TODO INSERT MORE TUPLES */

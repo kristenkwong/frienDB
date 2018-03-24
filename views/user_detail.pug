@@ -2,17 +2,12 @@ extends layout
 
 block content
 
-  h1 #{user.name}
-  p #[strong Birthday: ] #{user.birthday_formatted}
+  h1 #{user.first_name} #{user.last_name}
+  p #[strong Username: ] #{user.username}
+  p #[strong Birthday: ] #{user.birthdate}
+
+  
 
   div(style='margin-left: 20px; margin-top: 20px')
 
     h4 Posts
-
-    dl
-    each post in user_posts
-      dt
-        a(href=post.url) #{post.date}
-
-    else
-      p This user has no posts.
