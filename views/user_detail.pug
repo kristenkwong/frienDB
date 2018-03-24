@@ -4,10 +4,26 @@ block content
 
   h1 #{user.first_name} #{user.last_name}
   p #[strong Username: ] #{user.username}
-  p #[strong Birthday: ] #{user.birthdate}
+  p #[strong Birthday: ] #{birthday} (age #{age})
 
-  
+  if (user.born_city || user.born_country)
+    p
+      |#[strong Born: ]
+      if user.born_city
+      |#{user.born_city}, 
+      if user.born_country
+      |#{user.born_country}
+    if (user.lives_city || user.lives_country)
+      p
+        |#[strong Lives: ]
+        if user.lives_city
+        |#{user.lives_city},
+        if user.lives_country
+        |#{user.lives_country}
 
   div(style='margin-left: 20px; margin-top: 20px')
 
     h4 Posts
+
+  form(method="GET" action="/home/user/" + user.username + "/delete")
+    button(type="submit") delete user #{user.username}

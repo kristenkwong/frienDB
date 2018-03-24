@@ -1,32 +1,30 @@
 const {Client} = require('pg'); //newer version of Javascript to get the client
+const {Pool} = require('pg');
+const pool = new Pool();
 
 var async = require('async');
 var dotenv = require('dotenv');
-dotenv.load();
+var moment = require('moment');
+const pgp = require('pg-promise');
+const promise = require('bluebird'); //for promises
+dotenv.load(); //load environmental variables
 
 const {body, validationResult} = require('express-validator/check');
 const {sanitizeBody} = require('express-validator/filter');
 
+function getCookie(name) {
+  var value = '; ' + document.cookie;
+  var parts = value.split('; ' + name + '=');
+  if (parts.length == 2) return parts.pop().split(';').shift();
+}
+
 // Display index of site
 exports.index = function(req, res) {
 
-  res.render('index');
+  // TODO: make the index page
 
-  /* async.parallel({
-    user_count: function(callback) {
-      User.count(callback);
-    },
-    tag_count: function(callback) {
-      Tag.count(callback);
-    },
-    post_count: function(callback) {
-      Post.count(callback);
-    },
-  }, function(err, results) {
-    res.render('index', { title: 'FrienDB Home', error: err, data: results });
-  }); */
+  res.render('index')
 
-  // when rendering, we need title, error, and data
 };
 
 // Display list of all Users.
@@ -52,6 +50,20 @@ exports.user_list = function(req, res) {
     })
 
 };
+
+// Formats birthday to look nicer
+function birthday(date) {
+  console.log("date:", date);
+  return moment(date).format('MMMM D');
+};
+
+// Calculate age based on current time
+function userAge(date) {
+  console.log("calculating age")
+  var ageDifference = Date.now() - date.getTime();
+  var ageDate = new Date(ageDifference);
+  return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
 
 // Display detail page for a specific User.
 exports.user_detail = function(req, res) {
@@ -79,7 +91,7 @@ exports.user_detail = function(req, res) {
     })
     .then(() => {
       console.log('results??', result.user_result);
-      res.render('user_detail', {title: req.params.id, user: result.user_result[0]})
+      res.render('user_detail', {title: req.params.id, user: result.user_result[0], birthday: birthday(result.user_result[0].birthdate), age: userAge(result.user_result[0].birthdate)})
     })
 
   // TODO figure out how to send multiple sql queries and render results of posts
