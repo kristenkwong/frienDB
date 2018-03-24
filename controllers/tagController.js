@@ -1,5 +1,3 @@
-var Tag = require('../models/tag');
-
 // Display list of all Tags.
 exports.tag_list = function(req, res) {
   res.send('NOT IMPLEMENTED: Tag list GET')

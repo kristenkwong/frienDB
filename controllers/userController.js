@@ -1,6 +1,3 @@
-var User = require('../models/user');
-var Tag = require('../models/tag');
-var Post = require('../models/post')
 const {Client} = require('pg'); //newer version of Javascript to get the client
 
 var async = require('async');
