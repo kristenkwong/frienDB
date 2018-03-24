@@ -206,21 +206,17 @@ exports.user_delete_post = function(req, res) {
     connectionString: process.env.DATABASE_URL,
     ssl: true
   });
-  console.log(process.env.DATABASE_URL);
+
   client.connect()
     .then(()=> {
-      const sql = 'DELETE FROM books WHERE email = $1';
+      const sql = 'DELETE FROM users WHERE username = $1;';
       const params = [req.params.id]
       return client.query(sql, params);
     })
     .then((results) => {
       console.log('delete results', results);
-      res.redirect('/users')
+      res.redirect('/home/users')
     })
-    .catch(()=> {
-      console.log('err', err);
-      res.redirect('/books');
-    });
 };
 
 // Display User update form on GET

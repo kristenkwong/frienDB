@@ -10,7 +10,7 @@ block content
     p
       |#[strong Born: ]
       if user.born_city
-      |#{user.born_city}, 
+      |#{user.born_city},
       if user.born_country
       |#{user.born_country}
     if (user.lives_city || user.lives_country)
@@ -25,5 +25,7 @@ block content
 
     h4 Posts
 
-  form(method="GET" action="/home/user/" + user.username + "/delete")
+    p this is not implemented yet :c
+
+  form(method="POST" action="/home/user/" + user.username + "/delete")
     button(type="submit") delete user #{user.username}
