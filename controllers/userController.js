@@ -157,7 +157,7 @@ exports.user_create_post = [
 
 
           // sql to insert new user into db
-          const sql = 'INSERT INTO users (username, password, first_name, last_name, birthdate, born_city, born_country, lives_city, lives_country) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)';
+          const sql = 'INSERT INTO users (username, password, first_name, last_name, gender, birthdate, born_city, born_country, lives_city, lives_country) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)';
           const params = [req.body.username, req.body.password, req.body.first_name, req.body.last_name, req.body.gender, req.body.birthdate, req.body.born_city, req.body.born_country, req.body.lives_city, req.body.lives_country];
 
           // this thing checks if any of the form values are empty
@@ -174,7 +174,7 @@ exports.user_create_post = [
         .then((result) => {
           console.log('result?', result);
           //TODO need to redirect to the new user's detail page
-          res.redirect('/user/' + req.body.username);
+          res.redirect('/home/user/' + req.body.username);
         })
     }
   }
