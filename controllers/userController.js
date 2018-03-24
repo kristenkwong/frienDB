@@ -12,7 +12,10 @@ const {sanitizeBody} = require('express-validator/filter');
 
 // Display index of site
 exports.index = function(req, res) {
-  async.parallel({
+
+  res.render('index');
+
+  /* async.parallel({
     user_count: function(callback) {
       User.count(callback);
     },
@@ -24,7 +27,7 @@ exports.index = function(req, res) {
     },
   }, function(err, results) {
     res.render('index', { title: 'FrienDB Home', error: err, data: results });
-  });
+  }); */
 
   // when rendering, we need title, error, and data
 };
@@ -60,10 +63,15 @@ exports.user_detail = function(req, res) {
     connectionString: process.env.DATABASE_URL,
     ssl: true
   });
-  console.log(process.env.DATABASE_URL);
+
   client.connect()
     .then(()=> {
-      return client.query('SELECT * FROM users WHERE username=')
+      const sql = 'SELECT * FROM users WHERE user_id = $1;'
+      const params = [req.params.id];
+      return client.query(sql, params);
+    })
+    .then ((results) => {
+      console.log('results?', results);
     })
 
 
@@ -139,8 +147,9 @@ exports.user_create_post = [
           // if not, add tuples into location table as well
 
 
+          // sql to insert new user into db
           const sql = 'INSERT INTO users (email, password, first_name, family_name, birthdate, born_city, born_country, lives_city, lives_country) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)';
-          const params = [req.body.email, req.body.password, req.body.first_name, req.body.family_name, req.body.birthdate, req.body.born_city, req.body.born_country, req.body.lives_city, req.body.lives_country];
+          const params = [req.body.email, req.body.password, req.body.first_name, req.body.family_name, req.body.gender, req.body.birthdate, req.body.born_city, req.body.born_country, req.body.lives_city, req.body.lives_country];
 
           // this thing checks if any of the form values are empty
           // if they are empty, set them to null to avoid broke constraints in db
@@ -156,8 +165,8 @@ exports.user_create_post = [
         .then((result) => {
           console.log('result?', result);
           res.redirect('/');
-          //TODO need to redirect to the user's page
-          // res.redirect(user.url);
+          //TODO need to redirect to the new user's detail page
+          res.redirect(user.url);
         })
     }
   }
