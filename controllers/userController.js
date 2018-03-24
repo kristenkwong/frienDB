@@ -19,11 +19,56 @@ function getCookie(name) {
 }
 
 // Display index of site
-exports.index = function(req, res) {
+exports.index = async function(req, res) {
 
   // TODO: make the index page
 
-  res.render('index')
+  var result = {};
+  result.users_result = [];
+  result.posts_result = [];
+
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
+
+  client.connect();
+
+  try {
+    const users = await client.query('SELECT * FROM users;');
+    const posts = await client.query('SELECT * FROM post;');
+    result.users_result = users.rows;
+    result.posts_result = posts.rows;
+  } catch (e) {
+    next (e);
+  }
+
+  res.render('index', {users: result.users_result, posts: result.posts_result})
+
+  /* console.log("hi")
+  await client.connect();
+  await client.query('SELECT * FROM users;', (err, res) => {
+    if (err) {
+      console.log(err.stack);
+    } else {
+      //console.log(res.rows);
+      result.users_result = res.rows;
+      console.log(result.users_result);
+    }
+  })
+
+  await client.query('SELECT * FROM post;', (err, res) => {
+    if (err) {
+      console.log(err.stack);
+    } else {
+      //console.log(res.rows);
+      result.posts_result=res.rows;
+      console.log(result.posts_result);
+    }
+  }) */
+
+  //console.log(result.users_result);
+
 
 };
 
