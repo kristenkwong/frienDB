@@ -85,7 +85,7 @@ exports.user_detail = function(req, res) {
       res.render('user_detail', {title: req.params.id, user: result.user_result[0]})
     })
 
-
+  // TODO figure out how to send multiple sql queries and render results of posts
 
   /* async.parallel({
     user: function(callback) {
@@ -190,6 +190,7 @@ exports.user_delete_get = function(req,res) {
 
 // Handle User delete form on POST
 exports.user_delete_post = function(req, res) {
+  // TODO not done
   console.log('deleting id', req.params.id);
 
   const client = new Client({
