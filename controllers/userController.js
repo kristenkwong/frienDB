@@ -27,6 +27,8 @@ exports.index = async function(req, res) {
   try {
     const users = await client.query('SELECT * FROM users ORDER BY username ASC;');
     const posts = await client.query('SELECT * FROM post ORDER BY post_date DESC;');
+    await client.end();
+
     result.users_result = users.rows;
     result.posts_result = posts.rows;
   } catch (e) {
@@ -52,6 +54,7 @@ exports.user_list = function(req, res) {
     })
     .then((results) => {
       console.log('results?', results);
+      client.end();
       res.render('user_list', {title: 'User List', user_list: results.rows});
     })
     .catch((err) => {
@@ -100,6 +103,8 @@ exports.user_detail = async function(req, res) {
     const params = [req.params.id];
     const user = await client.query(sql_user, params);
     const posts = await client.query(sql_posts, params);
+    await client.end();
+
     if (user.rows[0]) {
       result.user_result = user.rows[0];
     } else {
@@ -140,6 +145,7 @@ async function checkIfUserExists(value) {
       return client.query(sql);
     })
     .then((result) => {
+      client.end();
       console.log(result.rowCount != 0);
       if (result.rowCount != 0) {
         console.log("return true");
@@ -218,6 +224,7 @@ exports.user_create_post = [
         })
         .then((result) => {
           console.log('result?', result);
+          client.end();
           res.redirect('/home/user/' + req.body.username);
         })
     }
@@ -242,6 +249,7 @@ exports.user_delete_get = function(req,res) {
     })
     .then((results) => {
       console.log('delete results', results);
+      client.end();
       res.redirect('/home/users')
     })
     .catch((err) => {
@@ -267,6 +275,7 @@ exports.user_delete_post = function(req, res) {
     })
     .then((results) => {
       console.log('delete results', results);
+      client.end();
       res.redirect('/home/users')
     })
     .catch((err) => {
@@ -295,6 +304,7 @@ exports.user_update_get = function(req, res) {
     })
     .catch((err) => {
       console.log('edit get err', err);
+      client.end();
       res.redirect('/home/users/')
     });
 };

@@ -100,6 +100,7 @@ exports.post_create_post = [
         return client.query(sql, params);
       })
       .then((results) => {
+        client.end();
         res.redirect('/home/posts')
       })
 }

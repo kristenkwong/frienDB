@@ -50,7 +50,7 @@ CREATE TABLE post (
   username VARCHAR(20) NOT NULL,
   post_date DATE NOT NULL,
   text VARCHAR(240),
-  image_link VARCHAR(120),
+  image_link VARCHAR(500),
   city VARCHAR(30),
   country VARCHAR(30),
   PRIMARY KEY (postid),
