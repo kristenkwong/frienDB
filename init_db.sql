@@ -127,7 +127,7 @@ INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
 );
 
 INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
-  'kristen', '2018-03-29', 'http://www.top13.net/wp-content/uploads/2015/10/perfectly-timed-funny-cat-pictures-5.jpg', null, 'Richmond', 'Canada'
+  'kristen', '2018-03-22', 'http://www.top13.net/wp-content/uploads/2015/10/perfectly-timed-funny-cat-pictures-5.jpg', null, 'Richmond', 'Canada'
 );
 
 /* TODO INSERT MORE TUPLES */

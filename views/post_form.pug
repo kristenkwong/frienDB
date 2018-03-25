@@ -9,13 +9,17 @@ block content
       input#text.form-control(type='text', name='text', required='false', value=(undefined===post ? '' : post.text))
 
       label(for='image') Image link:
-      input#text.form-control(type='url', name='image', required='false', value='https://')
+      input#text.form-control(type='url', name='image', value='https://')
 
       h3 Location:
       label(for='City') City:
-      input#text.form-control(type='text', name='city', required='false')
+      input#text.form-control(type='text', name='city', required='false', value=(undefined===post ? '' : post.city))
       label(for='Country') Country:
-      input#text.form-control(type='text', name='country', required='false')
+      input#text.form-control(type='text', name='country', required='false', value=(undefined===post ? '' : post.country))
+
+      h3 This is temporary until we figure out how to log in:
+      label(for="username") User:
+      input#text.form-control(type='text', name='username', required='true', value=(undefined===post ? '' : post.username))
 
     button.btn.btn-primary(type='submit') Post it!
 

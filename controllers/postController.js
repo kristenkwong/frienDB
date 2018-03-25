@@ -53,14 +53,57 @@ exports.post_detail = async function(req, res) {
 
 // Display Post create form on GET
 exports.post_create_get = function(req, res) {
-  // TODO the form isn't done
-  res.render('post_form', {title: 'Create Post'});
+  res.render('post_form', {title: 'Create New Post'});
 };
 
 // Handle Post create for on POST
-exports.post_create_post = function(req, res) {
-  res.send('NOT IMPLEMENTED: Post create GET')
+exports.post_create_post = [
+
+  // Validate fields
+  body('username').isLength({min:1}).trim().withMessage('Username is required.'),
+  body('text').isLength({min:1}).trim().withMessage('Text is required.'),
+
+  // Sanitize fields
+  sanitizeBody('user').trim().escape(),
+  sanitizeBody('text').trim().escape(),
+  sanitizeBody('city').trim().escape(),
+  sanitizeBody('country').trim().escape(),
+
+  (req, res, next) => {
+    // Extract the validation errors from a request
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/error messages.
+      res.render('post_form', {title: 'Create New Post', post: req.body, errors: errors.array()});
+      return;
+    }
+    else {
+
+      const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: true
+      });
+
+      client.connect()
+      .then(()=> {
+        console.log('connection complete');
+        //TODO need to check if city/country combinations are in location
+        // if not, add tuples into location table as well
+
+        // sql to insert new user into db
+        const sql = 'INSERT INTO post (username, post_date, text, image_link, city, country) VALUES ($1, $2, $3, $4, $5, $6)';
+        var today = new Date();
+        const params = [req.body.username, today, req.body.text, req.body.image, req.body.city, req.body.country];
+        return client.query(sql, params);
+      })
+      .then((results) => {
+        res.redirect('/home/posts')
+      })
 }
+    }
+
+]
 
 // Display Post delete form on GET
 exports.post_delete_get = function(req,res) {
