@@ -17,6 +17,7 @@ exports.post_list = async function(req, res) {
   try {
     const posts = await client.query('SELECT * FROM post ORDER BY post_date DESC');
     console.log(posts);
+    await client.end();
     res.render('post_list', {title: 'Post List', post_list: posts.rows})
   } catch(e) {
     res.render('error', {error: e})
@@ -46,6 +47,7 @@ exports.post_detail = async function(req, res) {
     })
     .then((results) => {
       console.log("results?", results)
+      client.end();
       res.render('post_detail', {title: 'Post id ' + req.body.id, post: results.rows[0], date: niceDate(results.rows[0].post_date)})
     })
 
