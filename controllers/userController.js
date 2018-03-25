@@ -298,13 +298,13 @@ exports.user_update_get = function(req, res) {
     })
     .then((results) => {
       console.log('Results?', results);
+      client.end();
       res.render('user_edit', {
         user: results.rows[0]
       });
     })
     .catch((err) => {
       console.log('edit get err', err);
-      client.end();
       res.redirect('/home/users/')
     });
 };
