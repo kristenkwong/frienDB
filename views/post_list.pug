@@ -5,8 +5,15 @@ block content
 
   ul
   each post in post_list
-    li
-      a(href=post.url) Post by #{post.user.name} at #{post.date}
+    hr
+    h4
+      a(href="/home/post/" + post.postid) Post by #{post.username}
+    p #{post.post_date}
+    if (post.image_link)
+      img(src=post.image_link, width=500)
+    if (post.text)
+      p #{post.text}
+
 
   else
-    li There are no books.
+    li There are no posts.

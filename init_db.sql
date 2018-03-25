@@ -49,6 +49,8 @@ CREATE TABLE post (
     INCREMENT BY 1),
   username VARCHAR(20) NOT NULL,
   post_date DATE NOT NULL,
+  text VARCHAR(240),
+  image_link VARCHAR(120),
   city VARCHAR(30),
   country VARCHAR(30),
   PRIMARY KEY (postid),
@@ -120,12 +122,12 @@ INSERT INTO users VALUES (
   'anthea', 'hi', 'Anthea', 'Kwong', 'Female', '2000-12-20', 'Richmond', 'Canada', null, null
 );
 
-INSERT INTO post (username, post_date, city, country) VALUES (
-  'anthea', '2018-03-23', null, null
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'anthea', '2018-03-23', null, 'Hello world! This is a post', null, null
 );
 
-INSERT INTO post (username, post_date, city, country) VALUES (
-  'kristen', '2018-03-29', 'Richmond', 'Canada'
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'kristen', '2018-03-29', 'http://www.top13.net/wp-content/uploads/2015/10/perfectly-timed-funny-cat-pictures-5.jpg', null, 'Richmond', 'Canada'
 );
 
 /* TODO INSERT MORE TUPLES */

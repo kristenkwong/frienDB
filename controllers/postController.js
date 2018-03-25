@@ -1,16 +1,54 @@
-//var Post = require('../models/post'); this was for mongo
-
 const {body, validationResult} = require('express-validator/check');
 const {sanitizeBody} = require('express-validator/filter');
+const {Client} = require('pg'); //newer version of Javascript to get the client
+
+var moment = require('moment');
 
 // Display list of all Post.
-exports.post_list = function(req, res) {
-  res.send('NOT IMPLEMENTED: Post list GET')
+exports.post_list = async function(req, res) {
+
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
+
+  client.connect();
+
+  try {
+    const posts = await client.query('SELECT * FROM post ORDER BY post_date DESC');
+    console.log(posts);
+    res.render('post_list', {title: 'Post List', post_list: posts.rows})
+  } catch(e) {
+    res.render('error', {error: e})
+  }
+
 };
 
+function niceDate(date) {
+  console.log(date);
+  return moment(date).format('MMMM D HH:MM:SS');
+}
+
 // Display detail page for a specific Post.
-exports.post_detail = function(req, res) {
-  res.send('NOT IMPLEMENTED: Post detail GET')
+exports.post_detail = async function(req, res) {
+  console.log('RETRIEVING DETAILS')
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
+
+  client.connect()
+    .then(() => {
+      console.log('connection complete');
+      const sql = 'SELECT * FROM post WHERE postid = $1 ORDER BY post_date ASC';
+      const params = [req.params.id];
+      return client.query(sql, params);
+    })
+    .then((results) => {
+      console.log("results?", results)
+      res.render('post_detail', {title: 'Post id ' + req.body.id, post: results.rows[0], date: niceDate(results.rows[0].post_date)})
+    })
+
 };
 
 // Display Post create form on GET

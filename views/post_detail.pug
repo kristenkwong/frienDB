@@ -2,10 +2,13 @@ extends layout
 
 block content
 
-  h1 ID: #{post._id}
+  h1 ID: #{post.postid}
 
   p #[strong Posted by: ]
-    a(href=post.user.url) #{post.user.name}
-  p #[strong Time: ] #{post.time}
+    a(href="/home/user/" + post.username) @#{post.username}
+  p #[strong Posted at: ] #{date}
 
-  
+  if (post.image_link)
+    img(src=post.image_link)
+  if (post.text)
+    p #{post.text}

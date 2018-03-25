@@ -69,7 +69,7 @@ exports.user_list = function(req, res) {
 
 // Formats birthday to look nicer
 function birthday(date) {
-  console.log("date:", date);
+  //console.log("date:", date);
   return moment(date).format('MMMM D');
 };
 

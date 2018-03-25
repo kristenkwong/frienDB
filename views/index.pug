@@ -11,12 +11,20 @@ block content
   else
     p This database has the following records:
 
-    h4 Users:
+    h3 Users:
     for user in users
       li
         a(href='/home/user/' + user.username) @#{user.username}
 
-    h4 Posts:
-    for post in posts
-      li
-        a(href='/home/post/' + post.postid) #{post.postid}
+    h3 Posts:
+    each post in posts
+      h4
+        if (post.postid)
+          a(href="/home/post/" + post.postid) Post by #{post.username} at #{post.post_date}
+        if (post.image_link)
+          img(src=post.image_link, width=500)
+      p #{post.text}
+      br
+
+    else
+      li There are no posts.
