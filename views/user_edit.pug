@@ -1,0 +1,50 @@
+extends layout
+
+block content
+  h1= title
+
+  form(method='POST' action='')
+    div.form-group
+      label(for='username') Username:
+      input#email.form-control(type='text', name='username', required='true', value=(undefined===user ? '' : user.username))
+
+      label(for='password') Password:
+      input#password.form-control(type='password', name='password', required='true', value=(undefined===user ? '' : user.password))
+
+    div.form-group
+
+      label(for='first_name') First Name:
+      input#first_name.form-control(type='text', name='first_name', required='true', value=(undefined===user ? '' : user.first_name))
+
+      label(for='last_name') Last Name:
+      input#family_name.form-control(type='text', name='last_name', required='true', value=(undefined===user ? '' : user.last_name))
+
+      label(for='birthdate') Birthdate:
+      input#birthdate.form-control(type='date', name='birthdate', value=(undefined===user ? '' : user.birthdate))
+
+      label(for='gender') Gender:
+      select#gender.form-control(type='select', placeholder='Select a gender', name='gender', value=(undefined===user ? '' : user.gender))
+        option -- Gender --
+        option(value="Female") Female
+        option(value="Male") Male
+        option(value="Other") Other
+
+      h3 Location Born
+      label(for='born_city') City:
+      input#born_city.form-control(type='text', name='born_city', value=(undefined===user ? '' : user.born_city))
+      label(for='born_country') Country:
+      input#born_country.form-control(type='text', name='born_country', value=(undefined===user ? '' : user.born_country))
+
+      h3 Current Location
+      label(for='lives_city') City:
+      input#lives_city.form-control(type='text', name='lives_city', value=(undefined===user ? '' : user.lives_city))
+      label(for='born_country') Country:
+      input#lives_country.form-control(type='text', name='lives_country', value=(undefined===user ? '' : user.lives_country))
+
+    button.btn.btn-primary(type='submit') Update user information
+
+  br
+  if errors
+    ul
+      for error in errors
+        li!= error.msg

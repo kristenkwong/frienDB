@@ -5,8 +5,6 @@ const pool = new Pool();
 var async = require('async');
 var dotenv = require('dotenv');
 var moment = require('moment');
-const pgp = require('pg-promise');
-const promise = require('bluebird'); //for promises
 dotenv.load(); //load environmental variables
 
 const {body, validationResult} = require('express-validator/check');
@@ -20,8 +18,6 @@ function getCookie(name) {
 
 // Display index of site
 exports.index = async function(req, res) {
-
-  // TODO: make the index page
 
   var result = {};
   result.users_result = [];
@@ -40,35 +36,10 @@ exports.index = async function(req, res) {
     result.users_result = users.rows;
     result.posts_result = posts.rows;
   } catch (e) {
-    next (e);
+    console.log(e);
   }
 
   res.render('index', {users: result.users_result, posts: result.posts_result})
-
-  /* console.log("hi")
-  await client.connect();
-  await client.query('SELECT * FROM users;', (err, res) => {
-    if (err) {
-      console.log(err.stack);
-    } else {
-      //console.log(res.rows);
-      result.users_result = res.rows;
-      console.log(result.users_result);
-    }
-  })
-
-  await client.query('SELECT * FROM post;', (err, res) => {
-    if (err) {
-      console.log(err.stack);
-    } else {
-      //console.log(res.rows);
-      result.posts_result=res.rows;
-      console.log(result.posts_result);
-    }
-  }) */
-
-  //console.log(result.users_result);
-
 
 };
 
@@ -79,11 +50,11 @@ exports.user_list = function(req, res) {
     connectionString: process.env.DATABASE_URL,
     ssl: true
   });
-  console.log(process.env.DATABASE_URL);
+
   client.connect() //this is async so we need promises
     .then(() => {
       console.log("connected");
-      return client.query('SELECT * FROM users');
+      return client.query('SELECT * FROM users ORDER BY username ASC');
     })
     .then((results) => {
       console.log('results?', results);
@@ -111,11 +82,11 @@ function userAge(date) {
 }
 
 // Display detail page for a specific User.
-exports.user_detail = function(req, res) {
+exports.user_detail = async function(req, res) {
 
   var result = {};
   result.user_result = [];
-  result.post_result = [];
+  result.posts_result = [];
 
   console.log("RETRIEVING DETAILS FOR " + req.params.id);
 
@@ -124,40 +95,30 @@ exports.user_detail = function(req, res) {
     ssl: true
   });
 
-  client.connect()
-    .then(()=> {
-      const sql = 'SELECT * FROM users WHERE username = $1;';
-      const params = [req.params.id];
-      return client.query(sql, params);
-    })
-    .then ((results) => {
-      console.log(results.rows[0])
-      result.user_result.push(results.rows[0]);
-    })
-    .then(() => {
-      console.log('results??', result.user_result);
-      res.render('user_detail', {title: req.params.id, user: result.user_result[0], birthday: birthday(result.user_result[0].birthdate), age: userAge(result.user_result[0].birthdate)})
-    })
+  client.connect();
 
-  // TODO figure out how to send multiple sql queries and render results of posts
-
-  /* async.parallel({
-    user: function(callback) {
-      User.findById(req.params.id).exec(callback);
-    },
-    posts: function(callback) {
-      Post.find({'user': req.params.id}, 'date').exec(callback);
-    },
-  }, function(err, results) {
-    if (err) {return next(err);} //error in api usage
-    if (results.user == null) {
-      var err = new Error('User not found');
-      err.status = 404;
-      return next(err);
+  try {
+    const sql_user = 'SELECT * FROM users WHERE username = $1;';
+    const sql_posts = 'SELECT * FROM post WHERE username = $1;';
+    const params = [req.params.id];
+    const user = await client.query(sql_user, params);
+    const posts = await client.query(sql_posts, params);
+    if (user.rows[0]) {
+      result.user_result = user.rows[0];
+    } else {
+      const err = new Error('User not found');
+      res.render('error', {message: "Whoops! User @" + req.params.id + " doesn't exist.", error: err});
+      return;
     }
-    // Successful, so render
-    res.render('user_detail', {title: results.user.name, user: results.user, user_posts: results.posts});
-  });*/
+    console.log(result.user_result);
+    result.posts_result = posts.rows;
+    console.log(result.posts_result);
+  } catch (e) {
+    console.log(e);
+  }
+
+  res.render('user_detail', {title: req.params.id, user: result.user_result, birthday: birthday(result.user_result.birthdate), age: userAge(result.user_result.birthdate), posts: result.posts_result});
+
 };
 
 // Display User create form on GET
@@ -239,7 +200,27 @@ exports.user_create_post = [
 
 // Display User delete form on GET
 exports.user_delete_get = function(req,res) {
-  res.send('NOT IMPLEMENTED: User delete GET')
+  // TODO not done
+  console.log('deleting id', req.params.id);
+
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
+
+  client.connect()
+    .then(()=> {
+      const sql = 'DELETE FROM users WHERE username = $1;';
+      const params = [req.params.id]
+      return client.query(sql, params);
+    })
+    .then((results) => {
+      console.log('delete results', results);
+      res.redirect('/home/users')
+    })
+    .catch((err) => {
+      res.redirect('/books')
+    })
 };
 
 // Handle User delete form on POST
@@ -262,14 +243,37 @@ exports.user_delete_post = function(req, res) {
       console.log('delete results', results);
       res.redirect('/home/users')
     })
+    .catch((err) => {
+      res.redirect('/books')
+    })
 };
 
 // Display User update form on GET
 exports.user_update_get = function(req, res) {
-  res.send('NOT IMPLEMENTED: User update GET');
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
+
+  client.connect()
+    .then(() => {
+      const sql = 'SELECT * FROM users WHERE username = $1;';
+      const params = [req.params.id];
+      return client.query(sql, params);
+    })
+    .then((results) => {
+      console.log('Results?', results);
+      res.render('user_edit', {
+        user: results.rows[0]
+      });
+    })
+    .catch((err) => {
+      console.log('edit get err', err);
+      res.redirect('/home/users/')
+    });
 };
 
 // Handle User update on POST
 exports.user_update_post = function(req, res) {
-  res.send('NOT IMPLEMENTED: User update POST');
+  res.redirect('/home/user/' + req.params.id)
 };

@@ -3,29 +3,40 @@ extends layout
 block content
 
   h1 #{user.first_name} #{user.last_name}
-  p #[strong Username: ] #{user.username}
+  p #[strong Username: ] @#{user.username}
   p #[strong Birthday: ] #{birthday} (age #{age})
+  if (user.gender)
+    p #[strong Gender: ] #{user.gender}
 
-  if (user.born_city || user.born_country)
-    p
-      |#[strong Born: ]
-      if user.born_city
-      |#{user.born_city},
-      if user.born_country
-      |#{user.born_country}
-    if (user.lives_city || user.lives_country)
-      p
-        |#[strong Lives: ]
-        if user.lives_city
-        |#{user.lives_city},
-        if user.lives_country
-        |#{user.lives_country}
+  if (user.born_city && user.born_country)
+    p #[strong Born: ] #{user.born_city}, #{user.born_country}
+  else if (user.born_city)
+    p #[strong Born: ] #{user.born_city}
+  else if (user.born_country)
+    p #[strong Born: ] #{user.born_country}
+
+  if (user.lives_city && user.lives_country)
+    p #[strong Lives in: ] #{user.lives_city}, #{user.lives_country}
+  else if (user.lives_city)
+    p #[strong Lives in: ] #{user.lives_city}
+  else if (user.lives_country)
+    p #[strong Lives in: ] #{user.lives_country}
 
   div(style='margin-left: 20px; margin-top: 20px')
 
     h4 Posts
 
-    p this is not implemented yet :c
+    for post in posts
+      li
+        a(href='/home/post/' + post.postid) #{post.postid} posted on #{post.post_date}
 
-  form(method="POST" action="/home/user/" + user.username + "/delete")
-    button(type="submit") delete user #{user.username}
+    else
+      p This user has no posts yet.
+
+  hr
+
+  p
+    a(href="/home/user/" + user.username + "/delete") delete user @#{user.username}
+
+  p
+    a(href="/home/user/" + user.username + "/update") edit user information

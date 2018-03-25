@@ -4,9 +4,10 @@ block content
   h1= title
 
   ul
+
   each user in user_list
     li
-      a(href="/home/user/" + user.username) #{user.first_name} #{user.last_name}
+      a(href="/home/user/" + user.username) #{user.first_name} #{user.last_name} (@#{user.username})
 
   else
     li There are no users.

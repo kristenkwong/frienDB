@@ -13,8 +13,10 @@ block content
 
     h4 Users:
     for user in users
-      li #{user.username}
+      li
+        a(href='/home/user/' + user.username) @#{user.username}
 
     h4 Posts:
     for post in posts
-      li #{post.postid}
+      li
+        a(href='/home/post/' + post.postid) #{post.postid}
