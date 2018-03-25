@@ -1,6 +1,10 @@
 var express = require('express');
 var router = express.Router();
-var cookies = require('js-cookie');
+var app = express();
+
+const cookieParser = require('cookie-parser');
+
+var username = 'username';
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -12,12 +16,26 @@ router.get('/home/statistics', function(req, res) {
   res.render('statistics', {title: 'Site Statistics'});
 });
 
-router.get('/home/login', function(req, res) {
-  res.render('login', {title: 'Login'});
-})
+function isAuthenticated(req, res, next) {
+  var getUser = req.cookies.user;
+  console.log(getUser);
+  if (getUser == undefined) {
+    res.render('login', {title: 'Log in'})
+  } else {
+    console.log('success')
+  }
+  next()
+}
 
-router.post('/home/login', function(req, res) {
-  res.redirect('/home');
-})
+function login(req, res, next) {
+  res.send('login');
+}
+
+function logout(req, res, next) {
+  res.send('logout');
+}
+
+router.get('/home/login', isAuthenticated, login);
+router.get('/home/logout', isAuthenticated, logout);
 
 module.exports = router;

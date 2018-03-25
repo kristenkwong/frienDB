@@ -10,12 +10,6 @@ dotenv.load(); //load environmental variables
 const {body, validationResult} = require('express-validator/check');
 const {sanitizeBody} = require('express-validator/filter');
 
-function getCookie(name) {
-  var value = '; ' + document.cookie;
-  var parts = value.split('; ' + name + '=');
-  if (parts.length == 2) return parts.pop().split(';').shift();
-}
-
 // Display index of site
 exports.index = async function(req, res) {
 
@@ -31,8 +25,8 @@ exports.index = async function(req, res) {
   client.connect();
 
   try {
-    const users = await client.query('SELECT * FROM users;');
-    const posts = await client.query('SELECT * FROM post;');
+    const users = await client.query('SELECT * FROM users ORDER BY username ASC;');
+    const posts = await client.query('SELECT * FROM post ORDER BY post_date DESC;');
     result.users_result = users.rows;
     result.posts_result = posts.rows;
   } catch (e) {
@@ -75,6 +69,9 @@ function birthday(date) {
 
 // Calculate age based on current time
 function userAge(date) {
+  if (date == null) {
+    return;
+  }
   console.log("calculating age")
   var ageDifference = Date.now() - date.getTime();
   var ageDate = new Date(ageDifference);
@@ -126,8 +123,38 @@ exports.user_create_get = function(req, res) {
   res.render('user_form', {title: 'Create New User'});
 };
 
+// return true if the user with the username already exists
+async function checkIfUserExists(value) {
+
+  console.log("value", value)
+
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  })
+
+  client.connect()
+    .then(() => {
+      const sql = "SELECT * FROM users WHERE username='" + value + "';";
+      console.log(sql);
+      return client.query(sql);
+    })
+    .then((result) => {
+      console.log(result.rowCount != 0);
+      if (result.rowCount != 0) {
+        console.log("return true");
+        return true;
+      } else {
+        console.log("return false")
+        return false;
+      }
+    })
+}
 // Handle User create for on POST
 exports.user_create_post = [
+
+  // TODO: add check for when the username already exists
+
   // Validate fields
   body('username').isLength({min:1}).trim().withMessage('Username is required.'),
   body('password').isLength({min:1}).withMessage('Password is required'),
@@ -191,7 +218,6 @@ exports.user_create_post = [
         })
         .then((result) => {
           console.log('result?', result);
-          //TODO need to redirect to the new user's detail page
           res.redirect('/home/user/' + req.body.username);
         })
     }

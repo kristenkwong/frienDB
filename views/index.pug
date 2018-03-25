@@ -18,13 +18,14 @@ block content
 
     h3 Posts:
     each post in posts
+      hr
       h4
-        if (post.postid)
-          a(href="/home/post/" + post.postid) Post by #{post.username} at #{post.post_date}
-        if (post.image_link)
-          img(src=post.image_link, width=500)
-      p #{post.text}
-      br
+        a(href="/home/post/" + post.postid) Post by @#{post.username}
+      h6 #{post.post_date}
+      if (post.image_link)
+        img(src=post.image_link, width=500)
+      if (post.text)
+        p #{post.text}
 
     else
       li There are no posts.

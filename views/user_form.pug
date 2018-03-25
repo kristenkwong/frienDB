@@ -3,6 +3,13 @@ extends layout
 block content
   h1= title
 
+  if errors
+    p #[strong Please see the following errors: ] 
+    ul
+      for error in errors
+        li!= error.msg
+    br
+
   form(method='POST' action='')
     div.form-group
       label(for='username') Username:
@@ -20,14 +27,13 @@ block content
       input#family_name.form-control(type='text', name='last_name', required='true', value=(undefined===user ? '' : user.last_name))
 
       label(for='birthdate') Birthdate:
-      input#birthdate.form-control(type='date', name='birthdate', value=(undefined===user ? '' : user.birthdate))
+      input#birthdate.form-control(type='date', name='birthdate', required='true', value=(undefined===user ? '' : user.birthdate))
 
       label(for='gender') Gender:
       select#gender.form-control(type='select', placeholder='Select a gender', name='gender')
-        option -- Gender --
+        option(value="Other") Other
         option(value="Female") Female
         option(value="Male") Male
-        option(value="Other") Other
 
       h3 Location Born
       label(for='born_city') City:
@@ -42,9 +48,3 @@ block content
       input#lives_country.form-control(type='text', name='lives_country', value=(undefined===user ? '' : user.lives_country))
 
     button.btn.btn-primary(type='submit') Sign me up, Scotty! 👽
-
-  br
-  if errors
-    ul
-      for error in errors
-        li!= error.msg
