@@ -1,7 +1,20 @@
 const {Client} = require('pg'); //newer version of Javascript to get the client
 
 exports.location_list = async function (req, res) {
-  res.send('NOT IMPLEMENTED YET, LOCATION LIST')
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
+
+  client.connect();
+
+  try {
+    const locations = await client.query('SELECT * FROM location ORDER BY country DESC');
+    await client.end();
+    res.render('location_list', {title: 'Location List', location_list: locations.rows})
+  } catch(e) {
+    res.render('error', {error: e})
+  }
 }
 
 // Return true if the location tuple already exists in the location table

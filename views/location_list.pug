@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1= title
+
+  ul
+  each location in location_list
+    ul
+      li
+        a(href="/home/location") #{location.city}, #{location.country}
+
+  else
+    p There are no locations.
