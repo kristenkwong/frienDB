@@ -111,7 +111,7 @@ exports.post_create_post = [
 
   // Sanitize fields
   sanitizeBody('user').trim().escape(),
-  sanitizeBody('text').trim().escape(),
+  sanitizeBody('text').trim(),
   sanitizeBody('city').trim().escape(),
   sanitizeBody('country').trim().escape(),
 
