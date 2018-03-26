@@ -131,7 +131,9 @@ exports.post_create_post = [
 
       try {
 
-        await location_controller.checkIfLocationExists(res, req.body.city, req.body.country);
+        if ((req.body.city == '' || req.body.city == '') && ((req.body.city == '' && req.body.city == '') != true)) {
+          res.render('post_form', {title: 'Create New Post', post: req.body, db_error: 'If you choose to use a location, you must input both a city and a country'});
+        }
 
         const client = new Client({
           connectionString: process.env.DATABASE_URL,
@@ -144,6 +146,16 @@ exports.post_create_post = [
         var today = new Date().toISOString().slice(0, 19).replace('T', ' ');
         console.log(today);
         const params = [req.body.username, today, req.body.text, req.body.image, req.body.city, req.body.country];
+
+        for (i = 0; i < params.length; i++) {
+          if (params[i] == '') {
+            params[i] = null;
+          }
+        }
+
+        if (params[4] && params[5]) {
+          await location_controller.checkIfLocationExists(res, params[4], params[5]);
+        }
 
         const post = await client.query(sql, params);
         await client.end();
