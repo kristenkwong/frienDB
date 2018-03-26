@@ -5,7 +5,7 @@ const pool = new Pool();
 var async = require('async');
 var dotenv = require('dotenv');
 var moment = require('moment');
-dotenv.load(); //load environmental variables
+//dotenv.load(); //load environmental variables
 
 const {body, validationResult} = require('express-validator/check');
 const {sanitizeBody} = require('express-validator/filter');

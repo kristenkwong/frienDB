@@ -6,6 +6,7 @@ var user_controller = require('../controllers/userController');
 var post_controller = require('../controllers/postController');
 var tag_controller = require('../controllers/tagController');
 var location_controller = require('../controllers/locationController');
+var query_controller = require('../controllers/queryController');
 
 /// USER ROUTES ///
 
@@ -93,5 +94,51 @@ router.get('/posts', post_controller.post_list);
 
 // GET request for list of location.
 router.get('/locations', location_controller.location_list);
+
+/// QUERY ROUTES ///
+
+// GET request for Selection
+router.get('/selection', query_controller.selection_get);
+
+// POST request for selection
+router.post('/selection', query_controller.selection_post);
+
+// GET request for Join
+router.get('/join', query_controller.join_get);
+
+// POST request for Join
+router.post('/join', query_controller.join_post);
+
+// GET request for Division
+router.get('/division', query_controller.division_get);
+
+// POST request for Division
+router.post('/division', query_controller.division_post);
+
+// GET request for Aggregation
+router.get('/aggregation', query_controller.aggregation_get);
+
+// POST request for Aggregation
+router.post('/aggregation', query_controller.aggregation_post);
+
+// GET request for Nested Aggregation
+router.get('/nested-aggregation', query_controller.nested_aggregation_get);
+
+// POST request for Nested Aggregation
+router.post('/nested-aggregation', query_controller.nested_aggregation_post);
+
+// GET request for Delete
+router.get('/delete', query_controller.delete_get);
+
+// POST request for Delete
+router.post('/delete', query_controller.delete_post);
+
+// GET request for Update
+router.get('/update', query_controller.update_get);
+
+// POST request for Update
+router.get('/update', query_controller.update_post);
+
+
 
 module.exports = router;
