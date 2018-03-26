@@ -7,6 +7,12 @@ block content
   p #[strong Posted by: ]
     a(href="/home/user/" + post.username) @#{post.username}
   p #[strong Posted at: ] #{date}
+  if (post.city && post.country)
+    p #[strong Posted from: ] #{post.city}, #{post.country}
+  else if (post.city)
+    p #[strong Posted from: ] #{post.city}
+  else if (post.country)
+    p #[strong Posted from: ] #{post.country}
 
   if (post.image_link)
     img(src=post.image_link)

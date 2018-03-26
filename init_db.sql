@@ -130,4 +130,8 @@ INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
   'kristen', '2018-03-22', 'http://www.top13.net/wp-content/uploads/2015/10/perfectly-timed-funny-cat-pictures-5.jpg', null, 'Richmond', 'Canada'
 );
 
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'victor', '2018-03-24', 'https://www.theflyer.com/uploads/image/202141401_202141500/corgi-puppies-for-sale-pembroke-welsh-corgi-202141424_2dbcfcd646e07935_858X617.jpg', 'this is expected to work now', null, null
+);
+
 /* TODO INSERT MORE TUPLES */

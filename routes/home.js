@@ -5,6 +5,7 @@ var router = express.Router();
 var user_controller = require('../controllers/userController');
 var post_controller = require('../controllers/postController');
 var tag_controller = require('../controllers/tagController');
+var location_controller = require('../controllers/locationController');
 
 /// USER ROUTES ///
 
@@ -87,5 +88,10 @@ router.get('/post/:id', post_controller.post_detail);
 
 // GET request for list of post.
 router.get('/posts', post_controller.post_list);
+
+/// LOCATION ROUTES ///
+
+// GET request for list of location.
+router.get('/locations', location_controller.location_list);
 
 module.exports = router;

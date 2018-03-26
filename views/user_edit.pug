@@ -24,10 +24,9 @@ block content
 
       label(for='gender') Gender:
       select#gender.form-control(type='select', placeholder='Select a gender', name='gender', value=(undefined===user ? '' : user.gender))
-        option -- Gender --
+        option(value="Other") Other
         option(value="Female") Female
         option(value="Male") Male
-        option(value="Other") Other
 
       h3 Location Born
       label(for='born_city') City:

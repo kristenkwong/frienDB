@@ -3,6 +3,7 @@ const {sanitizeBody} = require('express-validator/filter');
 const {Client} = require('pg'); //newer version of Javascript to get the client
 
 var moment = require('moment');
+const location_controller = require('../controllers/locationController')
 
 // Display list of all Post.
 exports.post_list = async function(req, res) {
@@ -16,7 +17,6 @@ exports.post_list = async function(req, res) {
 
   try {
     const posts = await client.query('SELECT * FROM post ORDER BY post_date DESC');
-    console.log(posts);
     await client.end();
     res.render('post_list', {title: 'Post List', post_list: posts.rows})
   } catch(e) {
@@ -58,6 +58,50 @@ exports.post_create_get = function(req, res) {
   res.render('post_form', {title: 'Create New Post'});
 };
 
+// Return true if the location tuple already exists in the location table
+// Else create new tuple
+async function checkIfLocationExists2(res, city, country) {
+
+  var result = {};
+  result.location_get = [];
+  result.location_set = [];
+
+  console.log("location: ", city, country);
+
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  })
+
+  client.connect();
+
+  try {
+    const sql = "SELECT * FROM location WHERE city = $1 and country = $2;";
+    params = [city, country];
+    console.log(sql, params);
+    result.location_get = await client.query(sql, params);
+
+    if (result.location_get.rowCount == 0) { // location tuple was not found
+
+      const sql = "INSERT INTO location (city, country) VALUES ($1, $2);";
+      params = [city, country];
+      console.log("Inserting tuple: ", sql, params);
+      result.location_set = await client.query(sql, params);
+      console.log("Inserted tuple: ", result.location_set.rows)
+    }
+
+    await client.end();
+  } catch (e) {
+    res.render('error', {error: e});
+  }
+
+  console.log("Result of location query", result.location_get);
+  console.log("Number of tuples found: ", result.location_get.rowCount);
+  console.log((result.location_get.rowCount ==0));
+
+  return result;
+}
+
 // Handle Post create for on POST
 exports.post_create_post = [
 
@@ -71,9 +115,12 @@ exports.post_create_post = [
   sanitizeBody('city').trim().escape(),
   sanitizeBody('country').trim().escape(),
 
-  (req, res, next) => {
+  async (req, res, next) => {
     // Extract the validation errors from a request
     const errors = validationResult(req);
+
+    var results = {};
+    results.post_result = [];
 
     if (!errors.isEmpty()) {
       // There are errors. Render form again with sanitized values/error messages.
@@ -82,30 +129,32 @@ exports.post_create_post = [
     }
     else {
 
-      const client = new Client({
-        connectionString: process.env.DATABASE_URL,
-        ssl: true
-      });
+      try {
 
-      client.connect()
-      .then(()=> {
-        console.log('connection complete');
-        //TODO need to check if city/country combinations are in location
-        // if not, add tuples into location table as well
+        await location_controller.checkIfLocationExists(res, req.body.city, req.body.country);
 
-        // sql to insert new user into db
-        const sql = 'INSERT INTO post (username, post_date, text, image_link, city, country) VALUES ($1, $2, $3, $4, $5, $6)';
+        const client = new Client({
+          connectionString: process.env.DATABASE_URL,
+          ssl: true
+        });
+
+        client.connect();
+
+        const sql = 'INSERT INTO post (username, post_date, text, image_link, city, country) VALUES ($1, $2, $3, $4, $5, $6);';
         var today = new Date();
         const params = [req.body.username, today, req.body.text, req.body.image, req.body.city, req.body.country];
-        return client.query(sql, params);
-      })
-      .then((results) => {
-        client.end();
-        res.redirect('/home/posts')
-      })
-}
-    }
 
+        const post = await client.query(sql, params);
+        await client.end();
+
+        results.post_result = post.rows;
+      } catch (e) {
+        console.log(e);
+        res.render('error', {error: e});
+      }
+
+      res.redirect('/home/posts');
+    }}
 ]
 
 // Display Post delete form on GET

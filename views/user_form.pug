@@ -4,10 +4,15 @@ block content
   h1= title
 
   if errors
-    p #[strong Please see the following errors: ] 
+    p #[strong Please see the following errors: ]
     ul
       for error in errors
         li!= error.msg
+  if db_error
+    p #[strong Please see the following errors: ]
+    ul
+      li #{db_error}
+
     br
 
   form(method='POST' action='')
@@ -44,7 +49,7 @@ block content
       h3 Current Location
       label(for='lives_city') City:
       input#lives_city.form-control(type='text', name='lives_city', value=(undefined===user ? '' : user.lives_city))
-      label(for='born_country') Country:
+      label(for='lives_country') Country:
       input#lives_country.form-control(type='text', name='lives_country', value=(undefined===user ? '' : user.lives_country))
 
     button.btn.btn-primary(type='submit') Sign me up, Scotty! 👽

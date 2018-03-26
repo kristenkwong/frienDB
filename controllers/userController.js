@@ -10,6 +10,8 @@ dotenv.load(); //load environmental variables
 const {body, validationResult} = require('express-validator/check');
 const {sanitizeBody} = require('express-validator/filter');
 
+const location_controller = require('../controllers/locationController')
+
 // Display index of site
 exports.index = async function(req, res) {
 
@@ -33,6 +35,7 @@ exports.index = async function(req, res) {
     result.posts_result = posts.rows;
   } catch (e) {
     console.log(e);
+    res.render('error', {error: e});
   }
 
   res.render('index', {users: result.users_result, posts: result.posts_result})
@@ -173,9 +176,13 @@ exports.user_create_post = [
   sanitizeBody('first_name').trim().escape(),
   sanitizeBody('last_name').trim().escape(),
   sanitizeBody('birthdate').toDate(),
+  sanitizeBody('lives_city').trim().escape(),
+  sanitizeBody('lives_country').trim().escape(),
+  sanitizeBody('born_city').trim().escape(),
+  sanitizeBody('born_country').trim().escape(),
 
   // Process request after validation and sanitization
-  (req, res, next) => {
+  async (req, res, next) => {
     // Extract the validation errors from a request
     const errors = validationResult(req);
 
@@ -184,6 +191,15 @@ exports.user_create_post = [
       res.render('user_form', {title: 'Create New User', user: req.body, errors: errors.array()});
       return;
     }
+
+    else if ((req.body.lives_city == '' || req.body.lives_country == '') && ((req.body.lives_city == '' && req.body.lives_country == '') != true)) {
+      res.render('user_form', {title: 'Create New User', user: req.body, db_error: 'If you choose to use a location, you must input both a city and a country'});
+    }
+
+    else if ((req.body.born_city == '' || req.body.born_country == '') && ((req.body.born_city == '' && req.body.born_country == '') != true)) {
+      res.render('user_form', {title: 'Create New User', user: req.body, db_error: 'If you choose to use a location, you must input both a city and a country'});
+    }
+
     else {
       // Data from form is valid.
 
@@ -197,36 +213,39 @@ exports.user_create_post = [
         connectionString: process.env.DATABASE_URL,
         ssl: true
       });
-      console.log(process.env.DATABASE_URL); //uses env settings to connect
-      client.connect()
-        .then(()=> {
-          console.log('connection complete');
-          // do query stuff
 
-          //TODO need to check if city/country combinations are in location
-          // if not, add tuples into location table as well
+      try {
+        await client.connect();
 
+        // sql to insert new user into db
+        const sql = 'INSERT INTO users (username, password, first_name, last_name, gender, birthdate, born_city, born_country, lives_city, lives_country) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)';
+        const params = [req.body.username, req.body.password, req.body.first_name, req.body.last_name, req.body.gender, req.body.birthdate, req.body.born_city, req.body.born_country, req.body.lives_city, req.body.lives_country];
 
-          // sql to insert new user into db
-          const sql = 'INSERT INTO users (username, password, first_name, last_name, gender, birthdate, born_city, born_country, lives_city, lives_country) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)';
-          const params = [req.body.username, req.body.password, req.body.first_name, req.body.last_name, req.body.gender, req.body.birthdate, req.body.born_city, req.body.born_country, req.body.lives_city, req.body.lives_country];
+        console.log(params);
 
-          // this thing checks if any of the form values are empty
-          // if they are empty, set them to null to avoid broke constraints in db
-          for (i = 0; i < params.length; i++) {
-            if (params[i] == '') {
-              params[i] = null;
-            }
+        // this thing checks if any of the form values are empty
+        // if they are empty, set them to null to avoid broke constraints in db
+        for (i = 0; i < params.length; i++) {
+          if (params[i] == '') {
+            params[i] = null;
           }
+        }
 
-          console.log(params);
-          return client.query(sql, params);
-        })
-        .then((result) => {
-          console.log('result?', result);
-          client.end();
-          res.redirect('/home/user/' + req.body.username);
-        })
+        // if location tuples do not exist yet, add them to the table
+        if (params[6] && params[7]) {
+          await location_controller.checkIfLocationExists(res, params[6], params[7]);
+        }
+        if (params[8], params[9]) {
+          await location_controller.checkIfLocationExists(res, params[8], params[9]);
+        }
+
+        await client.query(sql, params);
+        await client.end();
+        res.redirect('/home/user/' + req.body.username);
+
+      } catch (e) {
+        res.render('error', {error: e});
+      }
     }
   }
 ];
