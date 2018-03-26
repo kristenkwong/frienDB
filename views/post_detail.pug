@@ -18,3 +18,10 @@ block content
     img(src=post.image_link)
   if (post.text)
     p #{post.text}
+
+  hr
+
+  p
+    a(href='/home/post/' + post.postid + '/edit') edit post
+  p
+    a(href='/home/post/' + post.postid + '/delete') delete post

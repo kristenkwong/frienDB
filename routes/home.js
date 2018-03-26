@@ -78,10 +78,10 @@ router.get('/post/:id/delete', post_controller.post_delete_get);
 router.post('/post/:id/delete', post_controller.post_delete_post);
 
 // GET request to update post.
-router.get('/post/:id/update', post_controller.post_update_get);
+router.get('/post/:id/edit', post_controller.post_update_get);
 
 // POST request to update post
-router.post('/post/:id/update', post_controller.post_update_post);
+router.post('/post/:id/edit', post_controller.post_update_post);
 
 // GET request for one post
 router.get('/post/:id', post_controller.post_detail);

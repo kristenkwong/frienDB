@@ -177,15 +177,38 @@ exports.post_delete_get = function(req,res) {
 
 // Handle Post delete form on POST
 exports.post_delete_post = function(req, res) {
-  res.send('NOT IMPLEMENTED: Post delete POST');
+  res.redirect('/home/posts');
 };
 
 // Display Post update form on GET
 exports.post_update_get = function(req, res) {
-  res.send('NOT IMPLEMENTED: Post update GET');
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
+
+  client.connect()
+    .then(() => {
+      const sql = 'SELECT * FROM post WHERE postid = $1;';
+      const params = [req.params.id];
+      return client.query(sql, params);
+    })
+    .then((results) => {
+      console.log('Results?', results);
+      client.end();
+      res.render('post_edit', {
+        title: 'Edit Post',
+        post: results.rows[0]
+      });
+    })
+    .catch((err) => {
+      console.log('edit get err', err);
+      res.redirect('/home/posts/')
+    });
 };
 
 // Handle Post update on POST
 exports.post_update_post = function(req, res) {
-  res.send('NOT IMPLEMENTED: Post update POST');
+  // TODO this isn't done yet
+  res.redirect('/home/post/' + req.params.id)
 };

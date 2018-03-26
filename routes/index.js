@@ -12,8 +12,8 @@ router.get('/', function(req, res) {
   res.redirect('/home');
 });
 
-router.get('/home/statistics', function(req, res) {
-  res.render('statistics', {title: 'Site Statistics'});
+router.get('/home/database', function(req, res) {
+  res.render('database', {title: 'Database Queries'});
 });
 
 function isAuthenticated(req, res, next) {

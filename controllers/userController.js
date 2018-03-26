@@ -319,6 +319,7 @@ exports.user_update_get = function(req, res) {
       console.log('Results?', results);
       client.end();
       res.render('user_edit', {
+        title: 'Edit User',
         user: results.rows[0]
       });
     })
@@ -330,5 +331,6 @@ exports.user_update_get = function(req, res) {
 
 // Handle User update on POST
 exports.user_update_post = function(req, res) {
+  // TODO: this isn't done yet
   res.redirect('/home/user/' + req.params.id)
 };

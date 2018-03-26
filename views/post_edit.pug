@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  h1= title
+
+  form(method='POST' action='')
+    div.form-group
+      label(for='text') Text:
+      input#text.form-control(type='text', name='text', required='false', value=(undefined===post ? '' : post.text))
+
+      label(for='image') Image link:
+      input#text.form-control(type='url', name='image', value='https://')
+
+      h3 Location:
+      label(for='City') City:
+      input#text.form-control(type='text', name='city', value=(undefined===post ? '' : post.city))
+      label(for='Country') Country:
+      input#text.form-control(type='text', name='country', value=(undefined===post ? '' : post.country))
+
+      h3 This is temporary until we figure out how to log in:
+      label(for="username") User:
+      input#text.form-control(type='text', name='username', required='true', value=(undefined===post ? '' : post.username))
+
+    button.btn.btn-primary(type='submit') Update post
+
+  br
+  if errors
+    ul
+      for error in errors
+        li!= error.msg
