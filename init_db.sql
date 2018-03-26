@@ -48,7 +48,7 @@ CREATE TABLE post (
     START WITH 1
     INCREMENT BY 1),
   username VARCHAR(20) NOT NULL,
-  post_date DATE NOT NULL,
+  post_date TIMESTAMP NOT NULL,
   text VARCHAR(240),
   image_link VARCHAR(500),
   city VARCHAR(30),
@@ -131,7 +131,16 @@ INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
 );
 
 INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
-  'victor', '2018-03-24', 'https://www.theflyer.com/uploads/image/202141401_202141500/corgi-puppies-for-sale-pembroke-welsh-corgi-202141424_2dbcfcd646e07935_858X617.jpg', 'this is expected to work now', null, null
+  'victor', '2018-03-24 09:12:01 -8:00', 'https://www.theflyer.com/uploads/image/202141401_202141500/corgi-puppies-for-sale-pembroke-welsh-corgi-202141424_2dbcfcd646e07935_858X617.jpg', 'this is expected to work now', null, null
 );
+
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'anthea', '2018-03-25 22:12:23', 'https://78.media.tumblr.com/c4b083b398ac34b6ea4ee81d1436334d/tumblr_ndacpxmfQq1r8uffzo1_500.jpg', 'nice', null, null
+);
+
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'anthea', '2018-03-25 22:15:23', 'https://78.media.tumblr.com/fb9b9324fd94c9af5a0a54e2a59d2231/tumblr_ojw2uzUdHf1ug2e72o1_500.jpg', 'kristens mood right now', null, null
+);
+
 
 /* TODO INSERT MORE TUPLES */

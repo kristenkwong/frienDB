@@ -141,7 +141,8 @@ exports.post_create_post = [
         client.connect();
 
         const sql = 'INSERT INTO post (username, post_date, text, image_link, city, country) VALUES ($1, $2, $3, $4, $5, $6);';
-        var today = new Date();
+        var today = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        console.log(today);
         const params = [req.body.username, today, req.body.text, req.body.image, req.body.city, req.body.country];
 
         const post = await client.query(sql, params);
