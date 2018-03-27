@@ -6,6 +6,19 @@ block content
 
   h2 DELETE
   p A #[strong deletion with cascades] means that if the tuple that is part of a foreign key for another tuple in another table is deleted, that deletion cascades downwards and also deletes the tuple.
+
+  p A deletion is done using the following SQL statement:
+
+  pre.
+    DELETE * FROM users WHERE username = <username>;
+
+  p The deletion on cascade is implemented when the table is created (or when it's altered) like so:
+
+  pre.
+    FOREIGN KEY (username) REFERENCES users (username) ON DELETE CASCADE
+
+  h3 In our project:
+
   ul
     li We have implemented this in the #[strong user and post] relationship, where if the user is deleted, his/her posts are also deleted.
     p You can see this in action
