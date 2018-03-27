@@ -1,0 +1,71 @@
+extends layout
+
+block content
+
+  h1= title
+
+  if error
+    h4 Error!
+    p Please fix the following error before proceeding:
+    pre #{error.message}
+
+  form(method='POST' action='')
+    div.form-group
+    h3 SELECT
+
+    div
+
+      div(style='display: inline; padding-right: 20px;')
+        input.checkbox-input(type='checkbox', name='column', value='username', id='username')
+        label(for='username') username
+
+      div(style='display: inline; padding-right: 10px;')
+        input.checkbox-input(type='checkbox', name='column', value='first_name', id='first_name')
+        label(for='first_name') first_name
+
+      div(style='display: inline; padding-right: 10px;')
+        input.checkbox-input(type='checkbox', name='column', value='last_name', id='last_name')
+        label(for='last_name') last_name
+
+      div(style='display: inline; padding-right: 10px;')
+        input.checkbox-input(type='checkbox', name='column', value='gender', id='gender')
+        label(for='gender') gender
+
+      div(style='display: inline; padding-right: 10px;')
+        input.checkbox-input(type='checkbox', name='column', value='birthdate', id='birthdate')
+        label(for='birthdate') birthdate
+
+      div(style='display: inline; padding-right: 10px;')
+        input.checkbox-input(type='checkbox', name='column', value='born_city', id='born_city')
+        label(for='born_city') city born
+
+      div(style='display: inline; padding-right: 10px;')
+        input.checkbox-input(type='checkbox', name='column', value='born_country', id='born_country')
+        label(for='born_country') country born
+
+      div(style='display: inline; padding-right: 10px;')
+        input.checkbox-input(type='checkbox', name='column', value='lives_city', id='lives_city')
+        label(for='lives_city') city living in
+
+      div(style='display: inline; padding-right: 10px;')
+        input.checkbox-input(type='checkbox', name='column', value='lives_country', id='lives_country')
+        label(for='lives_country') country living in
+
+    h3 FROM USER
+    h3 WHERE
+
+    br
+
+    button.btn.btn-primary(type='submit') Send query
+
+  hr
+
+  if sql
+    p #[strong Your query: #{sql}]
+  if users
+    p #[strong Results: ]
+    each user in users
+      p #{user.row}
+
+    else
+      p Nothing to display here!
