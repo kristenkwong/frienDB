@@ -3,10 +3,18 @@ extends layout
 block content
   h1= title
 
+  if errors
+    ul
+      for error in errors
+        li!= error.msg
+  if error
+    p #[strong Error: ] Please fix this error before updating!
+    li!= error.message
+
+  br
+
   form(method='POST' action='')
     div.form-group
-      label(for='username') Username:
-      input#email.form-control(type='text', name='username', required='true', value=(undefined===user ? '' : user.username))
 
       label(for='password') Password:
       input#password.form-control(type='password', name='password', required='true', value=(undefined===user ? '' : user.password))
@@ -43,7 +51,5 @@ block content
     button.btn.btn-primary(type='submit') Update user information
 
   br
-  if errors
-    ul
-      for error in errors
-        li!= error.msg
+  p
+    a(href='/home/user/' + username) Cancel edit

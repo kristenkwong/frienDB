@@ -219,7 +219,7 @@ exports.user_create_post = [
 
         // sql to insert new user into db
         const sql = 'INSERT INTO users (username, password, first_name, last_name, gender, birthdate, born_city, born_country, lives_city, lives_country) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)';
-        const params = [req.body.username, req.body.password, req.body.first_name, req.body.last_name, req.body.gender, req.body.birthdate, req.body.born_city, req.body.born_country, req.body.lives_city, req.body.lives_country];
+        const params = [req.body.username, req.body.password, req.body.first_name, req.body.last_name, req.body.gender, req.body.birthdate.toUTCString(), req.body.born_city, req.body.born_country, req.body.lives_city, req.body.lives_country];
 
         console.log(params);
 
@@ -319,8 +319,9 @@ exports.user_update_get = function(req, res) {
       console.log('Results?', results);
       client.end();
       res.render('user_edit', {
-        title: 'Edit User',
-        user: results.rows[0]
+        title: 'Edit User @' + req.params.id,
+        user: results.rows[0],
+        username: req.params.id
       });
     })
     .catch((err) => {
@@ -330,7 +331,74 @@ exports.user_update_get = function(req, res) {
 };
 
 // Handle User update on POST
-exports.user_update_post = function(req, res) {
-  // TODO: this isn't done yet
-  res.redirect('/home/user/' + req.params.id)
-};
+exports.user_update_post = [
+
+  // Validate fields
+  body('password').isLength({min:1}).withMessage('Password is required'),
+  body('first_name').isLength({min:1}).trim().withMessage('First name is required.'),
+  body('last_name').isLength({min:1}).trim().withMessage('Last name is required.'),
+  body('birthdate', 'Invalid date of birth.').optional({checkFalsy: true}).isISO8601(),
+
+  // Sanitize fields
+  sanitizeBody('first_name').trim().escape(),
+  sanitizeBody('last_name').trim().escape(),
+  sanitizeBody('birthdate').toDate(),
+  sanitizeBody('lives_city').trim().escape(),
+  sanitizeBody('lives_country').trim().escape(),
+  sanitizeBody('born_city').trim().escape(),
+  sanitizeBody('born_country').trim().escape(),
+
+
+
+  async (req, res, next) => {
+    // Extract the validation errors from a request
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/error messages.
+      res.render('user_edit', {title: 'Update User' + req.params.id, user: req.body, errors: errors.array()});
+      return;
+    }
+
+    console.log('done errors');
+
+    const client = new Client({
+      connectionString: process.env.DATABASE_URL,
+      ssl: true
+    });
+
+    try {
+      client.connect();
+
+      // sql to insert new user into db
+      const sql = 'UPDATE users SET password = $2, first_name = $3, last_name = $4, gender = $5, birthdate = $6, born_city = $7, born_country = $8, lives_city = $9, lives_country = $10 WHERE username = $1';
+      const params = [req.params.id, req.body.password, req.body.first_name, req.body.last_name, req.body.gender, req.body.birthdate.toUTCString(), req.body.born_city, req.body.born_country, req.body.lives_city, req.body.lives_country];
+
+      console.log(sql, params);
+
+      // this thing checks if any of the form values are empty
+      // if they are empty, set them to null to avoid broke constraints in db
+      for (i = 0; i < params.length; i++) {
+        if (params[i] == '') {
+          params[i] = null;
+        }
+      }
+
+      // if location tuples do not exist yet, add them to the table
+      if (params[6] && params[7]) {
+        await location_controller.checkIfLocationExists(res, params[6], params[7]);
+      }
+      if (params[8], params[9]) {
+        await location_controller.checkIfLocationExists(res, params[8], params[9]);
+      }
+
+      await client.query(sql, params);
+      await client.end();
+      res.redirect('/home/user/' + req.params.id);
+    } catch (err) {
+      res.render('user_edit', {title: 'Update User @' + req.params.id, error: err, user: req.body})
+    }
+
+  }
+
+];

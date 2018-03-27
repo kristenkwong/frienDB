@@ -54,6 +54,7 @@ CREATE TABLE post (
   city VARCHAR(30),
   country VARCHAR(30),
   PRIMARY KEY (postid),
+  FOREIGN KEY (username) REFERENCES users (username) ON DELETE CASCADE,
   FOREIGN KEY (city, country) REFERENCES location (city, country) ON DELETE SET NULL
 );
 
