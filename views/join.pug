@@ -1,0 +1,16 @@
+extends layout
+
+block content
+
+  h1= title
+
+  h2 JOIN
+  p An #[strong join] statement is used to combine data from different tables. A join is implemented by a statement like follows:
+  pre.
+    SELECT * FROM post
+    INNER JOIN location
+    ON (post.country=location.country AND post.city=location.city)
+    WHERE (post.city='Richmond' AND post.country='Canada').
+  ul
+    li We implemented a join statement in displaying the posts from certain locations. An example statement is the statement seen above, where we joined the location and post tables on the city and country. Using this, we were able to display posts from locations.
+    li You can see this in action by going to All locations and clicking on any location. If there are posts associated with it, it will be shown.

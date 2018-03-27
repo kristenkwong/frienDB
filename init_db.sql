@@ -25,7 +25,7 @@ CREATE TABLE users (
   first_name VARCHAR (30) NOT NULL,
   last_name VARCHAR (30) NOT NULL,
   gender VARCHAR(10), -- male, female, other
-  birthdate DATE,
+  birthdate DATE CHECK (birthdate <= now()::date),
   born_city VARCHAR(30),
   born_country VARCHAR(30),
   lives_city VARCHAR (30),
@@ -79,20 +79,6 @@ CREATE TABLE tagged (
   FOREIGN KEY (postid) REFERENCES post (postid) ON DELETE CASCADE
 );
 
-CREATE TABLE text_post ( --ISA relationship with post
-  postid INTEGER NOT NULL,
-  content VARCHAR(240) NOT NULL,
-  PRIMARY KEY (postid),
-  FOREIGN KEY (postid) REFERENCES post (postid) ON DELETE CASCADE
-);
-
-CREATE TABLE image_post (
-  postid INTEGER NOT NULL,
-  link VARCHAR(120) NOT NULL, -- contains link to image
-  PRIMARY KEY (postid),
-  FOREIGN KEY (postid) REFERENCES post (postid) ON DELETE CASCADE
-);
-
 /* INSERTING DATA INTO TABLES */
 
 INSERT INTO location VALUES (
@@ -142,6 +128,10 @@ INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
 INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
   'anthea', '2018-03-25 22:15:23', 'https://78.media.tumblr.com/fb9b9324fd94c9af5a0a54e2a59d2231/tumblr_ojw2uzUdHf1ug2e72o1_500.jpg', 'kristens mood right now', null, null
 );
+
+INSERT INTO friends_with (username_1, username_2) VALUES ('kristen', 'victor');
+
+INSERT INTO friends_with (username_1, username_2) VALUES ('kristen', 'anthea');
 
 
 /* TODO INSERT MORE TUPLES */

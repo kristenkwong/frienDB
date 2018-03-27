@@ -28,7 +28,7 @@ block content
 
     for post in posts
       li
-        a(href='/home/post/' + post.postid) #{post.postid} posted on #{post.post_date}
+        a(href='/home/post/' + post.postid) Post @#{post.postid} posted on #{post.post_date}
 
     else
       p This user has no posts yet.

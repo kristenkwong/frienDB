@@ -7,7 +7,7 @@ block content
   each location in location_list
     ul
       li
-        a(href="/home/location") #{location.city}, #{location.country}
+        a(href="/home/location/" + location.city + '/' + location.country) #{location.city}, #{location.country}
 
   else
     p There are no locations.

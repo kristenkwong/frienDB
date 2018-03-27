@@ -95,6 +95,8 @@ router.get('/posts', post_controller.post_list);
 // GET request for list of location.
 router.get('/locations', location_controller.location_list);
 
+router.get('/location/:city/:country', location_controller.location_get);
+
 /// QUERY ROUTES ///
 
 // GET request for Selection

@@ -17,6 +17,39 @@ exports.location_list = async function (req, res) {
   }
 }
 
+exports.location_get = async function (req, res) {
+
+  var result = {};
+  result.location_posts = [];
+
+  const client = new Client ({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
+
+  client.connect();
+
+  try {
+    const sql = 'SELECT * FROM post INNER JOIN location ON (post.country=location.country AND post.city=location.city) WHERE (post.city=$1 AND post.country=$2)';
+    const params = [req.params.city, req.params.country];
+    console.log(sql, params);
+    const locations_posts = await client.query(sql, params);
+    await client.end();
+    result.location_posts = locations_posts.rows;
+  } catch (err) {
+    res.render('error', {error: err});
+  }
+
+  console.log(result.location_posts);
+
+  if (result.location_posts.length == 0) {
+    res.render('location_detail', {title: 'Location: ' + req.params.city + ', ' + req.params.country});
+  } else {
+    res.render('location_detail', {title: 'Location: ' + req.params.city + ', ' + req.params.country, posts: result.location_posts});
+  }
+
+}
+
 // Return true if the location tuple already exists in the location table
 // Else create new tuple
 exports.checkIfLocationExists = async function (res, city, country) {

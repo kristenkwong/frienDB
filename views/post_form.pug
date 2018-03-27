@@ -3,6 +3,15 @@ extends layout
 block content
   h1= title
 
+  if errors
+    ul
+      for error in errors
+        li!= error.msg
+  if db_error
+    h4 Error!
+    p Please fix the following error before proceeding:
+    pre #{db_error.message}
+
   form(method='POST' action='')
     div.form-group
       label(for='text') Text:
@@ -22,9 +31,3 @@ block content
       input#text.form-control(type='text', name='username', required='true', value=(undefined===post ? '' : post.username))
 
     button.btn.btn-primary(type='submit') Post it!
-
-  br
-  if errors
-    ul
-      for error in errors
-        li!= error.msg

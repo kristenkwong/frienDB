@@ -244,7 +244,7 @@ exports.user_create_post = [
         res.redirect('/home/user/' + req.body.username);
 
       } catch (e) {
-        res.render('error', {error: e});
+        res.render('user_form', {title: 'Create New User', user: req.body, db_error: e});
       }
     }
   }
@@ -298,7 +298,7 @@ exports.user_delete_post = function(req, res) {
       res.redirect('/home/users')
     })
     .catch((err) => {
-      res.redirect('/books')
+      res.render('error', {error: err});
     })
 };
 

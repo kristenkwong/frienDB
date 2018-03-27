@@ -1,0 +1,18 @@
+extends layout
+
+block content
+
+  h1= title
+
+  h2 DELETE
+  p A #[strong deletion with cascades] means that if the tuple that is part of a foreign key for another tuple in another table is deleted, that deletion cascades downwards and also deletes the tuple.
+  ul
+    li We have implemented this in the #[strong user and post] relationship, where if the user is deleted, his/her posts are also deleted.
+    p You can see this in action
+      a(href='/home/users')  [ here ]
+      |  by clicking on any user profile, and deleting the user. Then, navigate to the list of posts, and you can see that all of the posts from that user are deleted.
+    li This is implemented by an 'ON DELETE CASCADE' when listing an attribute as a foreign key on table create or alter.
+
+  p A #[strong deletion without cascading] means that even if that tuple is deleted, other tuples are not deleted.
+  ul
+    li For example, when a post is deleted, a user is not deleted.

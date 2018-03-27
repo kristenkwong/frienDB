@@ -162,8 +162,8 @@ exports.post_create_post = [
 
         results.post_result = post.rows;
       } catch (e) {
+        res.render('post_form', {title: 'Create New Post', post: req.body, db_error: e});
         console.log(e);
-        res.render('error', {error: e});
       }
 
       res.redirect('/home/posts');
@@ -172,7 +172,26 @@ exports.post_create_post = [
 
 // Display Post delete form on GET
 exports.post_delete_get = function(req,res) {
-  res.send('NOT IMPLEMENTED: Post delete GET');
+
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
+
+  client.connect()
+    .then(()=> {
+      const sql = 'DELETE FROM post WHERE postid = $1;';
+      const params = [req.params.id]
+      return client.query(sql, params);
+    })
+    .then((results) => {
+      console.log('delete results', results);
+      client.end();
+      res.redirect('/home/posts')
+    })
+    .catch((err) => {
+      res.render('error', {error: err})
+    })
 };
 
 // Handle Post delete form on POST
@@ -203,7 +222,7 @@ exports.post_update_get = function(req, res) {
     })
     .catch((err) => {
       console.log('edit get err', err);
-      res.redirect('/home/posts/')
+      res.render('post_edit', {error: err});
     });
 };
 

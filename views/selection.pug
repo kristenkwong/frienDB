@@ -6,7 +6,9 @@ block content
 
   h2 SELECTION & PROJECTION
   p A #[strong select] statement is used to select data from a database, choosing which rows are returned. #[strong Projection] is used for selecting which columns of the table to return.
-  p We have implemented a selection and projection from the Users table below:
+  ul
+    li We implemented a selection and projection to display the lists of all users, tags, posts, and locations. We have also used a projection in a #[strong 'WHERE username = username'] statement to display individual posts and users.
+    li We have implemented also a selection and projection from the Users table below for demonstration:
 
   hr
 
@@ -57,7 +59,7 @@ block content
         input.checkbox-input(type='checkbox', name='column', value='lives_country', id='lives_country')
         label(for='lives_country') country living in
 
-    h3 FROM USER
+    h3 FROM USER;
 
     br
 

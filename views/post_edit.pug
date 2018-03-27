@@ -3,10 +3,18 @@ extends layout
 block content
   h1= title
 
+  if errors
+    ul
+      for error in errors
+        li!= error.msg
+  if error
+    p #[strong Error: ] Please fix this error before updating!
+    li!= error.message
+
   form(method='POST' action='')
     div.form-group
       label(for='text') Text:
-      input#text.form-control(type='text', name='text', required='false', value=(undefined===post ? '' : post.text))
+      input#text.form-control(type='text', name='text', value=(undefined===post ? '' : post.text))
 
       label(for='image') Image link:
       input#text.form-control(type='url', name='image', value='https://')
@@ -22,9 +30,3 @@ block content
       input#text.form-control(type='text', name='username', required='true', value=(undefined===post ? '' : post.username))
 
     button.btn.btn-primary(type='submit') Update post
-
-  br
-  if errors
-    ul
-      for error in errors
-        li!= error.msg

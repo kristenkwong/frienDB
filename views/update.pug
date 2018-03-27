@@ -1,0 +1,38 @@
+extends layout
+
+block content
+
+  h1= title
+
+  h2 UPDATE
+  p An #[strong update] statement is used to edit a row in an existing tuple of a table. A #[strong CHECK] constraint is used to make sure that new values are checked: some will fail and the tuple will not be allowed to be updated.
+
+  p An update statement is written like follows:
+
+  pre.
+    UPDATE users
+    SET password = $2, first_name = $3, last_name = $4, gender = $5, birthdate = $6,
+    born_city = $7, born_country = $8, lives_city = $9, lives_country = $10
+    WHERE username = $1
+
+  p The CHECK constraint was implemented upon the creation of the table:
+
+  pre.
+    CREATE TABLE users (
+      username VARCHAR(20) NOT NULL, -- decided to do this to get a URL
+      ...
+      birthdate DATE CHECK (birthdate <= now()::date),
+      ...
+    );
+
+  p A CHECK constraint can be added when a table is altered using the following command:
+
+  pre.
+    ALTER TABLE users ADD CONSTRAINT birthdate_past CHECK (birthdate <= now()::date);
+
+  p node()::date gets the current date 
+
+  h3 In our Project:
+  ul
+    li We implemented a CHECK constraint on the #[strong birthdate] attribute. You cannot input a birthdate that is after today's date (although theoretically you could be 1 second old and make an account, I guess). This is the second code example above.
+    li You can see this in action by going to the user list, clicking on any user profile, clicking "Edit user", and changing attributes and saving it. You can see that if you set the birthdate to a future day, an error will appear and the tuple will not update. Update is implemented with the first example.

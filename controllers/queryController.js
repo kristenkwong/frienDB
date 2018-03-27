@@ -71,7 +71,7 @@ exports.selection_post = async function (req, res) {
 }
 
 exports.join_get = function (req, res) {
-  res.send('NOT IMPLEMENTED: JOIN GET');
+  res.render('join');
 }
 
 exports.join_post = function (req, res) {
@@ -103,7 +103,7 @@ exports.nested_aggregation_post = function (req, res) {
 }
 
 exports.delete_get = function (req, res) {
-  res.send('NOT IMPLEMENTED: DELETE GET');
+  res.render('delete');
 }
 
 exports.delete_post = function (req, res) {
@@ -111,7 +111,7 @@ exports.delete_post = function (req, res) {
 }
 
 exports.update_get = function (req, res) {
-  res.send('NOT IMPLEMENTED: UPDATE GET');
+  res.render('update');
 }
 
 exports.update_post = function (req, res) {

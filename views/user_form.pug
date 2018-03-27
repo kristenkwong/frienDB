@@ -11,7 +11,7 @@ block content
   if db_error
     p #[strong Please see the following errors: ]
     ul
-      li #{db_error}
+      li #{db_error.message}
 
     br
 
