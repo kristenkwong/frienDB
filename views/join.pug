@@ -11,6 +11,9 @@ block content
     INNER JOIN location
     ON (post.country=location.country AND post.city=location.city)
     WHERE (post.city='Richmond' AND post.country='Canada').
+
+  h3 In our project:
+  
   ul
     li We implemented a join statement in displaying the posts from certain locations. An example statement is the statement seen above, where we joined the location and post tables on the city and country. Using this, we were able to display posts from locations.
     li You can see this in action by going to All locations and clicking on any location. If there are posts associated with it, it will be shown.

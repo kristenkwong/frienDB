@@ -217,9 +217,11 @@ exports.user_create_post = [
       try {
         await client.connect();
 
+        const age = await userAge(req.body.birthdate);
+
         // sql to insert new user into db
-        const sql = 'INSERT INTO users (username, password, first_name, last_name, gender, birthdate, born_city, born_country, lives_city, lives_country) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)';
-        const params = [req.body.username, req.body.password, req.body.first_name, req.body.last_name, req.body.gender, req.body.birthdate.toUTCString(), req.body.born_city, req.body.born_country, req.body.lives_city, req.body.lives_country];
+        const sql = 'INSERT INTO users (username, password, first_name, last_name, gender, birthdate, born_city, born_country, lives_city, lives_country, age) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)';
+        const params = [req.body.username, req.body.password, req.body.first_name, req.body.last_name, req.body.gender, req.body.birthdate.toUTCString(), req.body.born_city, req.body.born_country, req.body.lives_city, req.body.lives_country, age];
 
         console.log(params);
 
@@ -233,12 +235,16 @@ exports.user_create_post = [
 
         // if location tuples do not exist yet, add them to the table
         if (params[6] && params[7]) {
+          console.log('inserting first location (born)')
           await location_controller.checkIfLocationExists(res, params[6], params[7]);
         }
         if (params[8], params[9]) {
+          console.log('inserting second location (lives)')
           await location_controller.checkIfLocationExists(res, params[8], params[9]);
         }
 
+        console.log('inserting user');
+        console.log(sql, params);
         await client.query(sql, params);
         await client.end();
         res.redirect('/home/user/' + req.body.username);
@@ -356,11 +362,9 @@ exports.user_update_post = [
 
     if (!errors.isEmpty()) {
       // There are errors. Render form again with sanitized values/error messages.
-      res.render('user_edit', {title: 'Update User' + req.params.id, user: req.body, errors: errors.array()});
+      res.render('user_form', {title: 'Update User' + req.params.id, user: req.body, errors: errors.array()});
       return;
     }
-
-    console.log('done errors');
 
     const client = new Client({
       connectionString: process.env.DATABASE_URL,
@@ -371,10 +375,10 @@ exports.user_update_post = [
       client.connect();
 
       // sql to insert new user into db
-      const sql = 'UPDATE users SET password = $2, first_name = $3, last_name = $4, gender = $5, birthdate = $6, born_city = $7, born_country = $8, lives_city = $9, lives_country = $10 WHERE username = $1';
-      const params = [req.params.id, req.body.password, req.body.first_name, req.body.last_name, req.body.gender, req.body.birthdate.toUTCString(), req.body.born_city, req.body.born_country, req.body.lives_city, req.body.lives_country];
+      const sql = 'UPDATE users SET password = $1, first_name = $2, last_name = $3, gender = $4, birthdate = $5, born_city = $6, born_country = $7, lives_city = $8, lives_country = $9, age = $10 WHERE username = $11';
+      const params = [req.body.password, req.body.first_name, req.body.last_name, req.body.gender, req.body.birthdate.toUTCString(), req.body.born_city, req.body.born_country, req.body.lives_city, req.body.lives_country, ageDate(req.body.birthdate), req.params.id];
 
-      console.log(sql, params);
+      console.log("SQL AND PARAMS", sql, params);
 
       // this thing checks if any of the form values are empty
       // if they are empty, set them to null to avoid broke constraints in db
@@ -388,7 +392,7 @@ exports.user_update_post = [
       if (params[6] && params[7]) {
         await location_controller.checkIfLocationExists(res, params[6], params[7]);
       }
-      if (params[8], params[9]) {
+      if (params[8] && params[9]) {
         await location_controller.checkIfLocationExists(res, params[8], params[9]);
       }
 
