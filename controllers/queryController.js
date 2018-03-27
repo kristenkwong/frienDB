@@ -31,6 +31,7 @@ exports.selection_post = async function (req, res) {
   try {
 
     var sql = '';
+    const sql_all = 'SELECT * FROM users;';
 
     if (req.body.column.length == 0) {
       throw new Error('No columns to return were chosen for the query.')
@@ -64,6 +65,9 @@ exports.selection_post = async function (req, res) {
 
   console.log(result.users_result);
   res.render('selection', {sql: sql, users: result.users_result});
+
+  // TODO implement selection to select certain rows
+
 }
 
 exports.join_get = function (req, res) {
