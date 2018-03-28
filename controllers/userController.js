@@ -217,11 +217,9 @@ exports.user_create_post = [
       try {
         await client.connect();
 
-        const age = await userAge(req.body.birthdate);
-
         // sql to insert new user into db
-        const sql = 'INSERT INTO users (username, password, first_name, last_name, gender, birthdate, born_city, born_country, lives_city, lives_country, age) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)';
-        const params = [req.body.username, req.body.password, req.body.first_name, req.body.last_name, req.body.gender, req.body.birthdate.toUTCString(), req.body.born_city, req.body.born_country, req.body.lives_city, req.body.lives_country, age];
+        const sql = 'INSERT INTO users (username, password, first_name, last_name, gender, birthdate, born_city, born_country, lives_city, lives_country) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)';
+        const params = [req.body.username, req.body.password, req.body.first_name, req.body.last_name, req.body.gender, req.body.birthdate.toUTCString(), req.body.born_city, req.body.born_country, req.body.lives_city, req.body.lives_country];
 
         console.log(params);
 
@@ -375,8 +373,8 @@ exports.user_update_post = [
       client.connect();
 
       // sql to insert new user into db
-      const sql = 'UPDATE users SET password = $1, first_name = $2, last_name = $3, gender = $4, birthdate = $5, born_city = $6, born_country = $7, lives_city = $8, lives_country = $9, age = $10 WHERE username = $11';
-      const params = [req.body.password, req.body.first_name, req.body.last_name, req.body.gender, req.body.birthdate.toUTCString(), req.body.born_city, req.body.born_country, req.body.lives_city, req.body.lives_country, ageDate(req.body.birthdate), req.params.id];
+      const sql = 'UPDATE users SET password = $1, first_name = $2, last_name = $3, gender = $4, birthdate = $5, born_city = $6, born_country = $7, lives_city = $8, lives_country = $9, WHERE username = $10';
+      const params = [req.body.password, req.body.first_name, req.body.last_name, req.body.gender, req.body.birthdate.toUTCString(), req.body.born_city, req.body.born_country, req.body.lives_city, req.body.lives_country, req.params.id];
 
       console.log("SQL AND PARAMS", sql, params);
 

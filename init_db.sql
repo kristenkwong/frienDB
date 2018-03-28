@@ -4,8 +4,6 @@ heroku pg:psql postgresql-rugged-11349 < init_db.sql
 This script drops all tables and creates new ones with sample values*/
 
 DROP TABLE friends_with;
-DROP TABLE text_post;
-DROP TABLE image_post;
 DROP TABLE likes;
 DROP TABLE tagged;
 DROP TABLE tag;
@@ -30,7 +28,6 @@ CREATE TABLE users (
   born_country VARCHAR(30),
   lives_city VARCHAR (30),
   lives_country VARCHAR(30),
-  age INTEGER,
   PRIMARY KEY (username),
   FOREIGN KEY (born_city, born_country) REFERENCES location (city, country) ON DELETE SET NULL,
   FOREIGN KEY (lives_city, lives_country) REFERENCES location (city, country) ON DELETE SET NULL
@@ -87,6 +84,10 @@ INSERT INTO location VALUES (
 );
 
 INSERT INTO location VALUES (
+  'San Francisco', 'California'
+);
+
+INSERT INTO location VALUES (
   'Vancouver', 'Canada'
 );
 
@@ -99,15 +100,23 @@ INSERT INTO location VALUES (
 );
 
 INSERT INTO users VALUES (
-  'kristen', 'hello', 'Kristen', 'Kwong', 'Female', '1997-02-05', 'Richmond', 'Canada', 'Vancouver', 'Canada', 21
+  'kristen', 'hello', 'Kristen', 'Kwong', 'Female', '1997-02-05', 'Richmond', 'Canada', 'Vancouver', 'Canada'
 );
 
 INSERT INTO users VALUES (
-  'victor', 'password', 'Victor', 'Tang', 'Male', '1997-03-29', 'Hong Kong', 'Hong Kong', 'Richmond', 'Canada', 21
+  'victor', 'password', 'Victor', 'Tang', 'Male', '1997-03-29', 'Hong Kong', 'Hong Kong', 'Richmond', 'Canada'
 );
 
 INSERT INTO users VALUES (
-  'anthea', 'hi', 'Anthea', 'Kwong', 'Female', '2000-12-20', 'Richmond', 'Canada', null, null, 17
+  'anthea', 'hi', 'Anthea', 'Kwong', 'Female', '2000-12-20', 'Richmond', 'Canada', null, null
+);
+
+INSERT INTO users VALUES (
+  'gerald', 'random', 'Gerald', 'Tang', 'Male', '2016-01-02', 'Vancouver', 'Canada', 'San Francisco', 'California'
+);
+
+INSERT INTO users VALUES (
+  'gwendolyn', 'nonono', 'Gwendolyn', 'Tang', 'Female', '2017-09-27', 'San Francisco', 'California', 'San Francisco', 'California'
 );
 
 INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (

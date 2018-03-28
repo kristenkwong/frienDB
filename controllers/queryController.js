@@ -87,7 +87,7 @@ exports.division_post = function (req, res) {
 }
 
 exports.aggregation_get = function (req, res) {
-  res.send('NOT IMPLEMENTED: AGGREGATION GET');
+  res.render('aggregation');
 }
 
 exports.aggregation_post = function (req, res) {
