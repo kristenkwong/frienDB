@@ -373,7 +373,7 @@ exports.user_update_post = [
       client.connect();
 
       // sql to insert new user into db
-      const sql = 'UPDATE users SET password = $1, first_name = $2, last_name = $3, gender = $4, birthdate = $5, born_city = $6, born_country = $7, lives_city = $8, lives_country = $9, WHERE username = $10';
+      const sql = 'UPDATE users SET password = $1, first_name = $2, last_name = $3, gender = $4, birthdate = $5, born_city = $6, born_country = $7, lives_city = $8, lives_country = $9 WHERE username = $10';
       const params = [req.body.password, req.body.first_name, req.body.last_name, req.body.gender, req.body.birthdate.toUTCString(), req.body.born_city, req.body.born_country, req.body.lives_city, req.body.lives_country, req.params.id];
 
       console.log("SQL AND PARAMS", sql, params);
