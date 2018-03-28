@@ -1,0 +1,92 @@
+extends layout
+
+block content
+
+  h1= title
+
+  h2 AGGREGATION GROUP BY
+  p A #[strong nested aggregation] refers to an aggregation on top of another aggregation. Using a #[strong group by] arranges it so the aggregation is only applied to part of the table, grouped by the group-by criteria.
+  p For example, an example of a group-by is getting the minimum age from users birthdates, grouped by city & country. This returns a table of minimum ages from each location.
+  p An example of a nested aggregation is getting the minimum age from each location, and then finding the average of those ages.
+
+  hr
+
+  p To see the queries in action, try our demo below:
+
+  div(class='card')
+    h3 Aggregation with Group-By
+    form(method='POST' action='')
+      div.form-group
+        label(for='nested_aggregation')
+          span #[strong I want the]
+            select#nested_aggregation.form-control(type='select', placeholder='select a query type', name='nested_aggregation')
+              option(value='AVG') AVG
+              option(value='MIN') MIN
+              option(value='MAX') MAX
+              option(value='SUM') SUM
+        p #[strong of users ages grouped by the location they were born.]
+      button.btn.btn-primary(type='submit' formaction='/home/nested-aggregation/result_nested') Send this query 👉
+
+    if result_nested
+
+      br
+
+      p You asked for the #[strong #{query_nested}]
+
+      p #[strong Your query: ]
+      p #[h6 #{sql_nested}]
+
+      p #[strong Query results: ]
+
+      table
+        tr
+          th city
+          th country
+          th query result
+        each result in result_nested
+          tr
+            td #{result.city}
+            td #{result.country}
+            td #{result.avg} #{result.min} #{result.max} #{result.sum}
+
+
+
+  div(class='card')
+    h3 Nested Aggregation with Group-By
+
+    br
+
+    if result_nested
+      h3 For the nested aggregation query on the left,
+      br
+      h5 the #[strong AVERAGE] is:
+      h2 #{summary_result.avg}
+      h5 the #[strong MINIMUM] is:
+      h2 #{summary_result.min}
+      h5 the #[strong MAXIMUM] is:
+      h2 #{summary_result.max}
+
+    else
+      p Select a query for the nested aggregation on the left first! 👈
+
+  hr
+
+  h3 How we did this
+
+  p To get the minimum age from birthdates, grouped by the location (city, country), we use this SQL query:
+  pre.
+    SELECT city, country, MIN (EXTRACT (YEAR FROM (AGE (birthdate))))
+    FROM users, location
+    WHERE users.born_city=location.city AND users.born_country=location.country
+    GROUP BY city, country;
+  p By replacing #[strong MIN] with AVG, SUM, MAX, or COUNT, we can get the different results for the card on the left.
+  p To calculate the average, minimum, and maximum of #[strong this ] query, we used this command:
+
+  pre.
+    SELECT AVG(location_data), MIN(location_data), MAX(location_data)
+    FROM (SELECT city, country, MIN (EXTRACT (YEAR FROM (AGE (birthdate))))
+    AS location_data FROM users, location
+    WHERE users.born_city=location.city AND users.born_country=location.country
+    GROUP BY city, country) users, location;
+
+  p Notice that we used an AS statement to save the data from the subquery to be used in the calculations of the overall average, minimum, and maximum. The results come out as columns in the result table.

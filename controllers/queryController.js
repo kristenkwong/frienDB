@@ -140,11 +140,33 @@ exports.aggregation_post_avgminmax = async function (req, res) {
 }
 
 exports.nested_aggregation_get = function (req, res) {
-  res.send('NOT IMPLEMENTED: NESTED AGGREGATION GET');
+  res.render('aggregation-groupby')
 }
 
-exports.nested_aggregation_post = function (req, res) {
-  res.send('NOT IMPLEMENTED: NESTED AGGREGATION POST');
+exports.nested_aggregation_post = async function (req, res) {
+  var result_nested = [];
+  var summary_result = [];
+
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
+
+  client.connect();
+
+  const sql = 'SELECT city, country, ' + req.body.nested_aggregation + ' (EXTRACT (YEAR FROM (AGE (birthdate)))) FROM users, location WHERE users.born_city=location.city AND users.born_country=location.country GROUP BY city, country;'
+
+  try {
+    console.log(sql);
+    result_nested = await client.query(sql);
+    summary_result = await client.query('SELECT AVG (location_data), MIN(location_data), MAX(location_data) FROM (SELECT city, country, ' + req.body.nested_aggregation + '(EXTRACT(YEAR FROM (AGE (birthdate)))) AS location_data FROM users, location WHERE users.born_city=location.city AND users.born_country=location.country GROUP BY city, country) users, location');
+    console.log(result_nested);
+  } catch (err) {
+    res.render('error', {error: err});
+  }
+
+  res.render('aggregation-groupby', {query_nested: req.body.nested_aggregation, sql_nested: sql, result_nested: result_nested.rows, summary_result: summary_result.rows[0]});
+
 }
 
 exports.delete_get = function (req, res) {

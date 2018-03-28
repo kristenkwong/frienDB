@@ -117,6 +117,16 @@ router.get('/division', query_controller.division_get);
 // POST request for Division
 router.post('/division', query_controller.division_post);
 
+// GET request for aggregation avg/min/max function
+router.get('/aggregation/avgminmax', function(req, res) {
+  res.redirect('/home/aggregation');
+});
+
+// GET request for aggregation count function
+router.post('/aggregation/count', function(req, res) {
+  res.redirect('/home/aggregation');
+});
+
 // GET request for Aggregation
 router.get('/aggregation', query_controller.aggregation_get);
 
@@ -132,8 +142,16 @@ router.post('/aggregation/count', query_controller.aggregation_post_count);
 // GET request for Nested Aggregation
 router.get('/nested-aggregation', query_controller.nested_aggregation_get);
 
+// POST request for Nested Aggregation – this is after the second submit
+//router.post('/nested-aggregation', query_controller.nested_aggregation_post);
+
+// GET request for Nested Aggregation
+router.get('/nested-aggregation/result_nested', function(req, res) {
+  redirect('/home/nested-aggregation');
+});
+
 // POST request for Nested Aggregation
-router.post('/nested-aggregation', query_controller.nested_aggregation_post);
+router.post('/nested-aggregation/result_nested', query_controller.nested_aggregation_post);
 
 // GET request for Delete
 router.get('/delete', query_controller.delete_get);
