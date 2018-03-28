@@ -90,8 +90,53 @@ exports.aggregation_get = function (req, res) {
   res.render('aggregation');
 }
 
-exports.aggregation_post = function (req, res) {
-  res.send('NOT IMPLEMENTED: AGGREGATION POST');
+exports.aggregation_post_count = async function (req, res) {
+  var count_result = [];
+
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
+
+  const sql = "SELECT COUNT(*) FROM " + req.body.count_query + ';';
+
+  try {
+    await client.connect();
+
+    console.log(sql)
+    count_result = await client.query(sql);
+    console.log(count_result.rows[0]);
+    await client.end();
+  } catch (err) {
+    res.render('error', {error: err});
+  }
+
+  res.render('aggregation', {count_sql: sql, count_result: count_result.rows[0]})
+}
+
+exports.aggregation_post_avgminmax = async function (req, res) {
+
+  var avgminmax_result = [];
+
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
+
+  const sql = "SELECT " + req.body.query_type + "(DATE_PART('year', now()::date) - DATE_PART('year', birthdate)) FROM users;"
+
+  try {
+    await client.connect();
+
+    console.log(sql)
+    avgminmax_result = await client.query(sql);
+    console.log(avgminmax_result.rows[0]);
+    await client.end();
+  } catch (err) {
+    res.render('error', {error: err});
+  }
+
+  res.render('aggregation', {avgminmax_sql: sql, avgminmax_result: avgminmax_result.rows[0]})
 }
 
 exports.nested_aggregation_get = function (req, res) {

@@ -13,5 +13,62 @@ block content
     li #[strong SUM: ] sum of value
     li #[strong COUNT: ] number of values
 
-  h3 In our project:
-  
+  hr
+
+  p To see the queries in action, try our demos below:
+
+  div(class="card")
+    h3 AVG/MIN/MAX/SUM
+    form(method='POST' action='')
+      div.form-group
+        label(for='query_type')
+          span #[strong I want the]
+            select#query_type.form-control(type='select', placeholder='select a query type', name='query_type')
+              option(value='AVG') AVG
+              option(value='MIN') MIN
+              option(value='MAX') MAX
+              option(value='SUM') SUM
+        p #[strong of all users ages.]
+      button.btn.btn-primary(type='submit' formaction='/home/aggregation/avgminmax') Send this query 👉
+
+    br
+
+    if avgminmax_result
+      p #[strong Your query: ]
+      p #{avgminmax_sql}
+      p #[strong Query result: ] #{avgminmax_result.avg} #{avgminmax_result.min} #{avgminmax_result.max} #{avgminmax_result.sum}
+
+  div(class="card")
+    h3 COUNT
+    form(method='POST' action='')
+      div.form-group
+        label(for='count_query') I want the total number of tuples in the
+            select#count_query.form-control(type='select', placeholder='select a table', name='count_query')
+              option(value='tag') tags
+              option(value='users') users
+              option(value='location') locations
+              option(value='post') posts
+        p #[strong table.]
+      button.btn.btn-primary(type='submit' formaction='/home/aggregation/count') Count 'em 👉
+
+    br
+
+    if count_result
+      p #[strong Your query: ]
+      p #{count_sql}
+      p #[strong Query result: ] #{count_result.count}
+
+
+  hr
+
+  h3 How we did this
+
+  p To get the #[strong age from birthdate column], since we did not have a column for users, we dynamically calculate the age based on the current time:
+  pre.
+    SELECT DATE_PART('year', now()::date) - DATE_PART('year', birthdate) AS age FROM users;
+
+  p To get the #[strong average age] of all users, we used what we found from the query above and used the aggregation function AVG.
+  pre.
+    SELECT AVG (DATE_PART ('year', now()::date) - DATE_PART ('year', birthdate)) FROM users;
+
+  p This query can be changed to get the #[strong minimum or maximum age] by replacing AVG with MIN or MAX.

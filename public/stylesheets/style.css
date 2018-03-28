@@ -12,3 +12,16 @@ a {
   padding: 0;
   list-style: none;
 }
+
+.card {
+  position: relative;
+  display: inline-block;
+  height: auto;
+  padding: 2px 10px 10px 10px;
+  width: 400px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  margin: 10px;
+  vertical-align: top;
+  overflow: auto;
+  text-align: center;
+}

@@ -121,7 +121,13 @@ router.post('/division', query_controller.division_post);
 router.get('/aggregation', query_controller.aggregation_get);
 
 // POST request for Aggregation
-router.post('/aggregation', query_controller.aggregation_post);
+//router.post('/aggregation', query_controller.aggregation_post);
+
+// POST request for aggregation avg/min/max function
+router.post('/aggregation/avgminmax', query_controller.aggregation_post_avgminmax);
+
+// POST request for aggregation count function
+router.post('/aggregation/count', query_controller.aggregation_post_count);
 
 // GET request for Nested Aggregation
 router.get('/nested-aggregation', query_controller.nested_aggregation_get);
