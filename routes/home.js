@@ -114,8 +114,21 @@ router.post('/join', query_controller.join_post);
 // GET request for Division
 router.get('/division', query_controller.division_get);
 
-// POST request for Division
-router.post('/division', query_controller.division_post);
+// GET request for Division - Users
+router.post('/division/users', query_controller.division_post_users);
+
+// POST request for Division - Users
+router.post('/division/users', function (req, res) {
+  res.redirect('/home/division')
+});
+
+// GET request for Division - Users
+router.post('/division/locations', query_controller.division_post_locations);
+
+// POST request for Division - Users
+router.post('/division/locations', function (req, res) {
+  res.redirect('/home/division')
+});
 
 // GET request for aggregation avg/min/max function
 router.get('/aggregation/avgminmax', function(req, res) {

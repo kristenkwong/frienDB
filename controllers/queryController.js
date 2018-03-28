@@ -41,7 +41,7 @@ exports.selection_post = async function (req, res) {
       result.users_result = users.rows;
     } else {
       // take all parameters, concatenate to a string of (<param>, <param>)
-      var sql_substring = '(';
+      var sql_substring = '';
       for (var i = 0; i < req.body.column.length; i++) {
         sql_substring = sql_substring + req.body.column[i];
         if (i != req.body.column.length - 1) {
@@ -49,7 +49,6 @@ exports.selection_post = async function (req, res) {
         }
         console.log(sql_substring);
       }
-      sql_substring += ')';
       sql = 'SELECT ' + sql_substring + ' FROM users;';
       console.log(sql);
       const users = await client.query(sql);
@@ -64,9 +63,8 @@ exports.selection_post = async function (req, res) {
   }
 
   console.log(result.users_result);
-  res.render('selection', {sql: sql, users: result.users_result});
-
-  // TODO implement selection to select certain rows
+  console.log(req.body.column)
+  res.render('selection', {sql: sql, params: req.body.column, users: result.users_result});
 
 }
 
@@ -75,15 +73,61 @@ exports.join_get = function (req, res) {
 }
 
 exports.join_post = function (req, res) {
-  res.send('NOT IMPLEMENTED: JOIN POST');
+  res.render('join');
 }
 
 exports.division_get = function (req, res) {
-  res.send('NOT IMPLEMENTED: DIVISION GET');
+  res.render('division');
 }
 
-exports.division_post = function (req, res) {
-  res.send('NOT IMPLEMENTED: DIVISION POST');
+exports.division_post_users = async function (req, res) {
+  var users_result = [];
+
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
+
+  const sql = 'SELECT username FROM users WHERE NOT EXISTS (SELECT * FROM location WHERE NOT EXISTS (SELECT * FROM post WHERE post.username=users.username AND post.city=location.city AND post.country=location.country));'
+
+  try {
+    await client.connect();
+
+    console.log(sql);
+
+    users_result = await client.query(sql);
+    await client.end();
+  } catch (err) {
+    res.render('error', {error: err});
+  }
+
+  console.log(users_result.rows)
+  res.render('division', {users_result: users_result.rows, sql: sql})
+}
+
+exports.division_post_locations = async function (req, res) {
+  var locations_result = [];
+
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
+
+  const sql = 'SELECT city, country FROM location WHERE NOT EXISTS (SELECT * FROM users WHERE NOT EXISTS (SELECT * FROM post WHERE post.username=users.username AND post.city=location.city AND post.country=location.country));'
+
+  try {
+    await client.connect();
+
+    console.log(sql);
+
+    locations_result = await client.query(sql);
+    await client.end();
+  } catch (err) {
+    res.render('error', {error: err});
+  }
+
+  console.log(locations_result.rows)
+  res.render('division', {locations_result: locations_result.rows, sql: sql})
 }
 
 exports.aggregation_get = function (req, res) {
@@ -174,7 +218,7 @@ exports.delete_get = function (req, res) {
 }
 
 exports.delete_post = function (req, res) {
-  res.send('NOT IMPLEMENTED: DELETE POST');
+  res.render('delete');
 }
 
 exports.update_get = function (req, res) {
@@ -182,5 +226,5 @@ exports.update_get = function (req, res) {
 }
 
 exports.update_post = function (req, res) {
-  res.send('NOT IMPLEMENTED: UPDATE POST');
+  res.render('update');
 }

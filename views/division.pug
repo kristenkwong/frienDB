@@ -1,0 +1,52 @@
+extends layout
+
+block content
+
+  h1= title
+
+  h2 DIVISION
+  p #[strong Division] is used to express queries that require an 'all' condition – the results returned must contain all the listed tuples.
+
+  hr
+
+  p To see the query in action, try our demo below:
+
+  div(class='card')
+    h3 Division of users over all locations
+    p #[strong Show me users who have created a post at every one of the location tuples:]
+    form(method='POST' action='')
+      button.btn.btn-primary(type='submit' formaction='/home/division/users') Get me these users 👯
+
+    br
+
+    if users_result
+      p #[strong Your query: ]
+      h6 #{sql}
+      p #[strong Query results: ]
+      table
+        tr
+          th username
+          each user in users_result
+              tr
+                td #{user.username}
+
+  div(class='card')
+    h3 Division of locations over all users
+    p #[strong Show me locations that all users have posted at:]
+    form(method='POST' action='')
+      button.btn.btn-primary(type='submit' formaction='/home/division/locations') Get me these locations 🌍
+
+    br
+
+    if locations_result
+      p #[strong Your query: ]
+      h6 #{sql}
+      p #[strong Query results: ]
+      table
+        tr
+          th city
+          th country
+          each location in locations_result
+              tr
+                td #{location.city}
+                td #{location.country}

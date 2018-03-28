@@ -13,12 +13,25 @@ a {
   list-style: none;
 }
 
+.card-wide {
+  position: relative;
+  display: inline-block;
+  height: auto;
+  padding: 4px 30px 30px 30px;
+  width: 100%;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  margin: 10px;
+  vertical-align: top;
+  overflow: auto;
+  text-align: center;
+}
+
 .card {
   position: relative;
   display: inline-block;
   height: auto;
-  padding: 2px 10px 10px 10px;
-  width: 400px;
+  padding: 4px 30px 30px 30px;
+  width: 350px;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   margin: 10px;
   vertical-align: top;

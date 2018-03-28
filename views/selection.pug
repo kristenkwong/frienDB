@@ -22,75 +22,112 @@ block content
   pre.
     SELECT (column1, column2, ... column-n) FROM users;
 
-  h3 In our project:
+  hr
+
+  p Try our demo below to see selection & projection in action:
+
+  div(class='card-wide')
+
+    if error
+      p #[strong Error: ] Please fix this error before updating!
+      li!= error.message
+
+    form(method='POST' action='')
+      div.form-group
+      h3 SELECT
+
+      div
+
+        div(style='display: inline; padding-right: 20px;')
+          input.checkbox-input(type='checkbox', name='column', value='username', id='username')
+          label(for='username') username
+
+        div(style='display: inline; padding-right: 10px;')
+          input.checkbox-input(type='checkbox', name='column', value='first_name', id='first_name')
+          label(for='first_name') first_name
+
+        div(style='display: inline; padding-right: 10px;')
+          input.checkbox-input(type='checkbox', name='column', value='last_name', id='last_name')
+          label(for='last_name') last_name
+
+        div(style='display: inline; padding-right: 10px;')
+          input.checkbox-input(type='checkbox', name='column', value='gender', id='gender')
+          label(for='gender') gender
+
+        div(style='display: inline; padding-right: 10px;')
+          input.checkbox-input(type='checkbox', name='column', value='birthdate', id='birthdate')
+          label(for='birthdate') birthdate
+
+        br
+
+        div(style='display: inline; padding-right: 10px;')
+          input.checkbox-input(type='checkbox', name='column', value='born_city', id='born_city')
+          label(for='born_city') city born
+
+        div(style='display: inline; padding-right: 10px;')
+          input.checkbox-input(type='checkbox', name='column', value='born_country', id='born_country')
+          label(for='born_country') country born
+
+        div(style='display: inline; padding-right: 10px;')
+          input.checkbox-input(type='checkbox', name='column', value='lives_city', id='lives_city')
+          label(for='lives_city') city living in
+
+        div(style='display: inline; padding-right: 10px;')
+          input.checkbox-input(type='checkbox', name='column', value='lives_country', id='lives_country')
+          label(for='lives_country') country living in
+
+        br
+
+      h3 FROM USER;
+      button.btn.btn-primary(type='submit') Send query
+
+    if sql
+      hr
+
+      p #[strong Your query:]
+      pre #{sql}
+    if users
+      p #[strong Query results: ]
+      table
+        tr
+        each param in params
+          th #{param}
+        each user in users
+          tr
+            if user.username
+              td #{user.username}
+            if user.first_name
+              td #{user.first_name}
+            if user.last_name
+              td #{user.last_name}
+            if user.gender
+              td #{user.gender}
+            if user.birthdate
+              td #{user.birthdate.toDateString()}
+            if params.includes('born_city')
+              if (user.born_city === null)
+                td null
+              else
+                td #{user.born_city}
+            if params.includes('born_country')
+              if (user.born_country === null)
+                td null
+              else
+                td #{user.born_country}
+            if params.includes('lives_city')
+              if (user.lives_city === null)
+                td null
+              else
+                td #{user.lives_city}
+            if params.includes('lives_country')
+              if (user.lives_country === null)
+                td null
+              else
+                td #{user.lives_country}
+
+  hr
+
+  h3 Other places we used selection and projection
 
   ul
     li We implemented a selection and projection to display the lists of all users, tags, posts, and locations. We have also used a projection in a #[strong 'WHERE username = username'] statement to display individual posts and users.
-    li We have implemented also a selection and projection from the Users table below for demonstration:
-
-  hr
-
-  if error
-    h4 Error!
-    p Please fix the following error before proceeding:
-    pre #{error.message}
-
-  form(method='POST' action='')
-    div.form-group
-    h3 SELECT
-
-    div
-
-      div(style='display: inline; padding-right: 20px;')
-        input.checkbox-input(type='checkbox', name='column', value='username', id='username')
-        label(for='username') username
-
-      div(style='display: inline; padding-right: 10px;')
-        input.checkbox-input(type='checkbox', name='column', value='first_name', id='first_name')
-        label(for='first_name') first_name
-
-      div(style='display: inline; padding-right: 10px;')
-        input.checkbox-input(type='checkbox', name='column', value='last_name', id='last_name')
-        label(for='last_name') last_name
-
-      div(style='display: inline; padding-right: 10px;')
-        input.checkbox-input(type='checkbox', name='column', value='gender', id='gender')
-        label(for='gender') gender
-
-      div(style='display: inline; padding-right: 10px;')
-        input.checkbox-input(type='checkbox', name='column', value='birthdate', id='birthdate')
-        label(for='birthdate') birthdate
-
-      div(style='display: inline; padding-right: 10px;')
-        input.checkbox-input(type='checkbox', name='column', value='born_city', id='born_city')
-        label(for='born_city') city born
-
-      div(style='display: inline; padding-right: 10px;')
-        input.checkbox-input(type='checkbox', name='column', value='born_country', id='born_country')
-        label(for='born_country') country born
-
-      div(style='display: inline; padding-right: 10px;')
-        input.checkbox-input(type='checkbox', name='column', value='lives_city', id='lives_city')
-        label(for='lives_city') city living in
-
-      div(style='display: inline; padding-right: 10px;')
-        input.checkbox-input(type='checkbox', name='column', value='lives_country', id='lives_country')
-        label(for='lives_country') country living in
-
-    h3 FROM USER;
-
-    br
-
-    button.btn.btn-primary(type='submit') Send query
-
-  hr
-
-  if sql
-    p #[strong Your query: #{sql}]
-  if users
-    p #[strong Results: ]
-    each user in users
-      p #{user.row}
-
-    else
-      p Nothing to display here!
