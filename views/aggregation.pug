@@ -34,6 +34,7 @@ block content
     br
 
     if avgminmax_result
+      p You wanted to get the #[strong #{query}].
       p #[strong Your query: ]
       p #{avgminmax_sql}
       p #[strong Query result: ] #{avgminmax_result.avg} #{avgminmax_result.min} #{avgminmax_result.max} #{avgminmax_result.sum}
@@ -49,7 +50,7 @@ block content
               option(value='location') locations
               option(value='post') posts
         p #[strong table.]
-      button.btn.btn-primary(type='submit' formaction='/home/aggregation/count') Count 'em 👉
+      button.btn.btn-primary(type='submit' formaction='/home/aggregation/count') Count 'em 🖐
 
     br
 
@@ -63,12 +64,12 @@ block content
 
   h3 How we did this
 
-  p To get the #[strong age from birthdate column], since we did not have a column for users, we dynamically calculate the age based on the current time:
+  p To get the #[strong age from birthdate column], since we did not have a column for users, we dynamically calculate the age based on the current time. PostgreSQL comes with a helper called AGE() that gets the time interval between now and the date. However, this returns as a Postgres Interval type, so we use EXTRACT to get just the years.
   pre.
-    SELECT DATE_PART('year', now()::date) - DATE_PART('year', birthdate) AS age FROM users;
+    SELECT EXTRACT (YEAR FROM AGE(birthdate)) AS age FROM users;
 
   p To get the #[strong average age] of all users, we used what we found from the query above and used the aggregation function AVG.
   pre.
-    SELECT AVG (DATE_PART ('year', now()::date) - DATE_PART ('year', birthdate)) FROM users;
+    SELECT AVG (EXTRACT (YEAR FROM (AGE (birthdate)))) FROM users;
 
-  p This query can be changed to get the #[strong minimum or maximum age] by replacing AVG with MIN or MAX.
+  p This query can be changed to get the #[strong minimum or maximum age, or total ages] by replacing AVG with MIN, MAX, or SUM.

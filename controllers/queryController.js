@@ -123,7 +123,7 @@ exports.aggregation_post_avgminmax = async function (req, res) {
     ssl: true
   });
 
-  const sql = "SELECT " + req.body.query_type + "(DATE_PART('year', now()::date) - DATE_PART('year', birthdate)) FROM users;"
+  const sql = "SELECT " + req.body.query_type + " (EXTRACT (YEAR FROM (AGE (birthdate)))) FROM users;"
 
   try {
     await client.connect();
@@ -136,7 +136,7 @@ exports.aggregation_post_avgminmax = async function (req, res) {
     res.render('error', {error: err});
   }
 
-  res.render('aggregation', {avgminmax_sql: sql, avgminmax_result: avgminmax_result.rows[0]})
+  res.render('aggregation', {query: req.body.query_type, avgminmax_sql: sql, avgminmax_result: avgminmax_result.rows[0]})
 }
 
 exports.nested_aggregation_get = function (req, res) {
