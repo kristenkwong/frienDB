@@ -11,7 +11,7 @@ exports.tag_list = async function(req, res) {
   client.connect();
 
   try {
-    const tags = await client.query('SELECT * FROM tag ORDER BY tag_text ASC');
+    const tags = await client.query('SELECT * FROM tag WHERE EXISTS (SELECT tag_text FROM tagged WHERE tagged.tag_text=tag.tag_text) ORDER BY tag_text ASC;');
     await client.end();
     console.log(tags);
     res.render('tag_list', {title: 'Tag List', tag_list: tags.rows})

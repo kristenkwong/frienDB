@@ -124,6 +124,10 @@ INSERT INTO users VALUES (
 );
 
 INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'kristen', '2018-03-29', 'http://blog.topazlabs.com/wp-content/uploads/2014/04/scott_stulberg_13.jpg', null, null, null
+);
+
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
   'gerald', '2018-03-23', null, 'This is a post from Tokyo.', 'Tokyo', 'Japan'
 );
 
