@@ -16,17 +16,40 @@ block content
 
 
   if (post.image_link)
-    img(src=post.image_link)
+    img(src=post.image_link style='width: 100%')
   if (post.text)
     p #{post.text}
-  if (tags.length > 0) 
+
+  p #[strong Tags:]
+  if (tags.length > 0)
     p #{tags.join(', ')}
-    
-  
+
+
 
   hr
 
-  p
-    a(href='/home/post/' + post.postid + '/edit') edit post
-  p
-    a(href='/home/post/' + post.postid + '/delete') delete post
+  if curr_user
+    if (curr_user === post.username)
+      p
+        a(href='/home/post/' + post.postid + '/edit') edit post
+      p
+        a(href='/home/post/' + post.postid + '/delete') delete post
+
+    if liked_flag == true
+      p
+        a(href='/home/post/' + post.postid + '/unlike') 👎 unlike post
+    else
+      p
+        a(href='/home/post/' + post.postid + '/like') 👍 like post
+
+  if likers
+    if likers.length == 1
+      each liker in likers
+        p #[a(href='/home/user/' + liker.username) @#{liker.username} ] #[span likes this post!]
+    else
+      p.
+      each liker in likers
+        a(href='/home/user/' + liker.username) @#{liker.username},  
+      span likes this post!
+  else
+    span No one likes this post. Be the first!

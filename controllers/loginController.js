@@ -1,8 +1,13 @@
 const {Client} = require('pg'); //newer version of Javascript to get the client
 
-exports.selection_get = function (req, res) {
-  // just render the selection form
-  res.render('selection');
+exports.get_user = function(req, res) {
+  if (typeof localStorage === "undefined" || localStorage === null) {
+    var LocalStorage = require('node-localstorage').LocalStorage;
+    localStorage = new LocalStorage('./scratch');
+  }
+
+  const curr_user = localStorage.getItem('user');
+  return curr_user;
 }
 
 
@@ -61,6 +66,7 @@ exports.login_post = async function(req, res) {
         }
 
         localStorage.setItem('user', req.body.username);
+        await client.end();
 
         res.render('logout', {title: "You're logged in!", curr_user: localStorage.getItem('user')});
       } else {

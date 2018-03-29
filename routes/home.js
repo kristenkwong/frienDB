@@ -55,7 +55,7 @@ router.get('/users', user_controller.user_list);
 router.get('/user/:id/add-friend', user_controller.user_addfriend);
 
 // GET request for adding user as friend
-router.get('/user/:id/remove-friend', user_controller.user_removefriend); 
+router.get('/user/:id/remove-friend', user_controller.user_removefriend);
 
 /// TAG ROUTES ///
 
@@ -110,7 +110,10 @@ router.get('/post/:id', post_controller.post_detail);
 router.get('/posts', post_controller.post_list);
 
 // POST request for adding user as friend
-router.get('/user/:id/like-post', post_controller.post_like);
+router.get('/post/:id/like', post_controller.post_like);
+
+// POST request for adding user as friend
+router.get('/post/:id/unlike', post_controller.post_unlike);
 
 /// LOCATION ROUTES ///
 

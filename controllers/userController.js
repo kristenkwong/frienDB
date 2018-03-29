@@ -11,6 +11,7 @@ const {body, validationResult} = require('express-validator/check');
 const {sanitizeBody} = require('express-validator/filter');
 
 const location_controller = require('../controllers/locationController')
+const login_controller = require('../controllers/loginController')
 
 // Display index of site
 exports.index = async function(req, res) {
@@ -87,12 +88,7 @@ function userAge(date) {
 // Display detail page for a specific User.
 exports.user_detail = async function(req, res) {
 
-  if (typeof localStorage === "undefined" || localStorage === null) {
-    var LocalStorage = require('node-localstorage').LocalStorage;
-    localStorage = new LocalStorage('./scratch');
-  }
-
-  const curr_user = await localStorage.getItem('user');
+  const curr_user = login_controller.get_user();
 
   var result = {};
   result.user_result = [];
@@ -184,8 +180,6 @@ async function checkIfUserExists(value) {
 }
 // Handle User create for on POST
 exports.user_create_post = [
-
-  // TODO: add check for when the username already exists
 
   // Validate fields
   body('username').isLength({min:1}).trim().withMessage('Username is required.'),
@@ -431,13 +425,7 @@ exports.user_update_post = [
 // use ID to create tuple in friends_with table
 exports.user_addfriend = async function (req, res) {
 
-  if (typeof localStorage === "undefined" || localStorage === null) {
-    var LocalStorage = require('node-localstorage').LocalStorage;
-    localStorage = new LocalStorage('./scratch');
-  }
-
-  const curr_user = localStorage.getItem('user');
-  console.log(curr_user);
+  const curr_user = login_controller.get_user();
 
   const client = new Client({
     connectionString: process.env.DATABASE_URL,
@@ -450,6 +438,7 @@ exports.user_addfriend = async function (req, res) {
     const sql = 'INSERT INTO friends_with VALUES ($1, $2)';
     const params = [curr_user, req.params.id]
     await client.query(sql, params);
+    await client.end();
     res.redirect('/home/user/' + req.params.id)
   } catch (err) {
     res.render('error', {error: err})
@@ -460,12 +449,7 @@ exports.user_addfriend = async function (req, res) {
 // use ID to remove tuple in friends_with table
 exports.user_removefriend = async function (req, res) {
 
-  if (typeof localStorage === "undefined" || localStorage === null) {
-    var LocalStorage = require('node-localstorage').LocalStorage;
-    localStorage = new LocalStorage('./scratch');
-  }
-
-  const curr_user = localStorage.getItem('user');
+  const curr_user = login_controller.get_user();
 
   const client = new Client({
     connectionString: process.env.DATABASE_URL,
@@ -478,6 +462,7 @@ exports.user_removefriend = async function (req, res) {
     const sql = 'DELETE FROM friends_with WHERE (username_1=$1 AND username_2=$2) or (username_1=$3 AND username_2=$4);';
     const params = [curr_user, req.params.id, req.params.id, curr_user]
     await client.query(sql, params);
+    await client.end();
     res.redirect('/home/user/' + req.params.id)
   } catch (err) {
     res.render('error', {error: err})
