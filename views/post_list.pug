@@ -10,7 +10,7 @@ block content
       a(href="/home/post/" + postTag.post.postid) Post by @#{postTag.post.username}
     p #{postTag.post.post_date}
     if (postTag.post.image_link)
-      img(src=postTag.post.image_link, width=500px)
+      img(src=postTag.post.image_link width=500)
     if (postTag.post.text)
       p #{postTag.post.text}
     if (postTag.tags.length > 0)

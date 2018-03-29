@@ -11,11 +11,8 @@ const {body, validationResult} = require('express-validator/check');
 const {sanitizeBody} = require('express-validator/filter');
 
 const location_controller = require('../controllers/locationController')
-<<<<<<< HEAD
 const login_controller = require('../controllers/loginController')
-=======
 const tag_controller = require('../controllers/tagController')
->>>>>>> fb7c18a464a2cc268283a2082a6ade39eaf8ef96
 
 // Display index of site
 exports.index = async function(req, res) {

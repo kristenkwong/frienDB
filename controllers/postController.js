@@ -414,6 +414,10 @@ exports.post_like = async function (req, res) {
   try {
     await client.connect();
 
+    if (curr_user == null) {
+      res.render('login', {title: 'Please log in.'});
+    }
+
     const sql = 'INSERT INTO likes VALUES ($1, $2)';
     const params = [curr_user, req.params.id]
     await client.query(sql, params);
@@ -437,6 +441,10 @@ exports.post_unlike = async function (req, res) {
 
   try {
     await client.connect();
+
+    if (curr_user == null) {
+      res.render('login', {title: 'Please log in.'});
+    }
 
     const sql = 'DELETE FROM likes WHERE (username=$1 AND postid=$2)';
     const params = [curr_user, req.params.id]

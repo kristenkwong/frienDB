@@ -19,7 +19,7 @@ block content
     img(src=post.image_link style='width: 100%')
   if (post.text)
     p #{post.text}
-  if (tags.length > 0) 
+  if (tags.length > 0)
     p Tags: #{tags.join(', ')}
 
 
@@ -44,10 +44,10 @@ block content
     if likers.length == 1
       each liker in likers
         p #[a(href='/home/user/' + liker.username) @#{liker.username} ] #[span likes this post!]
+    else if likers.length == 0
+      span No one likes this post. Be the first!
     else
       p.
       each liker in likers
         a(href='/home/user/' + liker.username) @#{liker.username},
       span likes this post!
-  else
-    span No one likes this post. Be the first!

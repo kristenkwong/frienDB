@@ -124,6 +124,26 @@ INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
 );
 
 INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'anthea', '2018-03-23', null, 'This is a post from Tokyo.', 'Tokyo', 'Japan'
+);
+
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'anthea', '2018-03-23', null, 'This is a post from Richmond.', 'Richmond', 'Canada'
+);
+
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'anthea', '2018-03-23', null, 'This is a post from Vancouver.', 'Vancouver', 'Canada'
+);
+
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'anthea', '2018-03-23', null, 'This is a post from San Francisco.', 'San Francisco', 'California'
+);
+
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'anthea', '2018-03-23', null, 'This is a post from Hong Kong.', 'Hong Kong', 'Hong Kong'
+);
+
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
   'kristen', '2018-03-22', 'http://www.top13.net/wp-content/uploads/2015/10/perfectly-timed-funny-cat-pictures-5.jpg', null, 'Richmond', 'Canada'
 );
 
@@ -184,5 +204,17 @@ INSERT INTO tagged (tag_text, postid) VALUES ('image', 3);
 INSERT INTO tagged (tag_text, postid) VALUES ('lol', 4);
 
 INSERT INTO tagged (tag_text, postid) VALUES ('lol', 5);
+
+INSERT INTO likes (username, postid) VALUES ('kristen', 3);
+
+INSERT INTO likes (username, postid) VALUES ('milton', 7);
+
+INSERT INTO likes (username, postid) VALUES ('victor', 2);
+
+INSERT INTO likes (username, postid) VALUES ('kristen', 4);
+
+INSERT INTO likes (username, postid) VALUES ('kristen', 5);
+
+INSERT INTO likes (username, postid) VALUES ('kristen', 1);
 
 /* TODO INSERT MORE TUPLES */
