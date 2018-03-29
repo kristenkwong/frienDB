@@ -1,7 +1,8 @@
 ## FrienDB: Simple Social Media Networking Database
-Made for CPSC 304 2017W2
 
 ### ⭐️⭐️ CLICK [HERE](https://friendb.herokuapp.com/) TO SEE OUR APP IN ACTION ⭐️⭐️ ###
+
+<img align='right' width='100' height='100' src='https://github.com/kristenkwong/frienDB/blob/master/public/images/preview.gif?raw=true'>'
 
 FrienDB is a simple web application, simulating a social media service, running on Heroku with the Postgres add-on.
 
@@ -14,3 +15,5 @@ Our application contains:
 * Demo pages and explanations for the following database query types: Selection and projection, Join, Division, Aggregation, Nested Aggregation with Group-By, Delete, and Update
 
 **Made with:** Node.js (Express), PostgreSQL, Pug templating hosted on Heroku with the Postgres add-on
+
+This project was made for **CPSC 304 2017W2: Introduction to Relational Databases**.
