@@ -354,7 +354,7 @@ exports.post_update_get = async function(req, res) {
 };
 
 // Handle Post update on POST
-exports.post_update_post = function(req, res) {
+exports.post_update_post = [//= function(req, res) {
   // Sanitize fields
   sanitizeBody('user').trim().escape(),
   sanitizeBody('text').trim(),
@@ -363,7 +363,6 @@ exports.post_update_post = function(req, res) {
   sanitizeBody('tags').trim().escape(),
 
   async (req, res, next) => {
-
     if (typeof localStorage === "undefined" || localStorage === null) {
       var LocalStorage = require('node-localstorage').LocalStorage;
       localStorage = new LocalStorage('./scratch');
@@ -397,15 +396,15 @@ exports.post_update_post = function(req, res) {
 
         client.connect();
 
-        const sql = 'UPDATE post SET username = $1, text = $2, image_link = $3, city = $4, country = $5;';
+        const sql = 'UPDATE post SET username = $1, text = $2, image_link = $3, city = $4, country = $5 WHERE postid = $6;';
         var today = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
         var params = [];
 
         if (curr_user == 'admin') { //if admin, get the username from the form
-          params = [req.body.username, req.body.text, req.body.image, req.body.city, req.body.country];
+          params = [req.body.username, req.body.text, req.body.image, req.body.city, req.body.country, req.params.id];
         } else { //if not admin, get currently logged in user
-          params = [curr_user, req.body.text, req.body.image, req.body.city, req.body.country];
+          params = [curr_user, req.body.text, req.body.image, req.body.city, req.body.country, req.params.id];
         }
 
         for (i = 0; i < params.length; i++) {
@@ -418,18 +417,41 @@ exports.post_update_post = function(req, res) {
           await location_controller.checkIfLocationExists(res, params[4], params[5]);
         }
 
-        const post = await client.query(sql, params);
-        await client.end();
+        let tags = req.body.tags.split(",");
+        tags = tags.map(tag => {
+          return tag.trim();
+        }).filter(tag => {
+          return tag !== '';
+        })
 
+        const post = await client.query(sql, params);
+
+
+        const deleteTags = await client.query('DELETE FROM tagged WHERE postid = $1', [req.params.id]);
+
+        const tagQuery = await Promise.all(tags.map(async (tag) => {
+          const tagExists = await tag_controller.tagExists(client, tag);
+          console.log(tagExists);
+          if (!tagExists) {
+            const insertTagSql = await client.query('INSERT into tag (tag_text) VALUES ($1)', [tag]);
+          }
+          const taggedSql = 'INSERT INTO tagged (tag_text, postid) VALUES ($1, $2);';
+          const tagParams = [tag, req.params.id];
+          console.log(tag);
+          console.log(tagParams);
+          return client.query(taggedSql, tagParams);
+        }))
+
+        await client.end();
+        res.redirect('/home/post/' + req.params.id);
         results.post_result = post.rows;
       } catch (e) {
         res.render('post_form', {title: 'Edit Post', post: req.body, db_error: e, curr_user: curr_user});
         console.log(e);
       }
 
-      res.redirect('/home/post/' + req.params.id)
     }}
-};
+]
 
 // use ID to create tuple in friends_with table
 exports.post_like = async function (req, res) {
