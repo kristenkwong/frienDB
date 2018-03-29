@@ -4,7 +4,7 @@
 
 FrienDB is a simple web application, simulating a social media service, running on Heroku with the Postgres add-on.
 
-<img align='right' width='600' height='100' src='https://github.com/kristenkwong/frienDB/blob/master/public/images/preview.gif?raw=true'>
+<img align='right' width='400' src='https://github.com/kristenkwong/frienDB/blob/master/public/images/preview.gif?raw=true'>
 
 Our application contains:
 * A home page, listing all users and posts with their content.
