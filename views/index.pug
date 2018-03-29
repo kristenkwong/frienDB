@@ -17,15 +17,17 @@ block content
         a(href='/home/user/' + user.username) @#{user.username}
 
     h3 Posts:
-    each post in posts
+    each postTag in postTag_list
       hr
       h4
-        a(href="/home/post/" + post.postid) Post by @#{post.username}
-      h6 #{post.post_date}
-      if (post.image_link)
-        img(src=post.image_link, width=500)
-      if (post.text)
-        p #{post.text}
+        a(href="/home/post/" + postTag.post.postid) Post by @#{postTag.post.username}
+      h6 #{postTag.post.post_date}
+      if (postTag.post.image_link)
+        img(src=postTag.post.image_link, width=500)
+      if (postTag.post.text)
+        p #{postTag.post.text}
+      if (postTag.tags.length > 0) 
+        p Tags: #{postTag.tags.join(', ')}
 
     else
       li There are no posts.

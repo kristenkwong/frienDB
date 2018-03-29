@@ -11,13 +11,13 @@ const {body, validationResult} = require('express-validator/check');
 const {sanitizeBody} = require('express-validator/filter');
 
 const location_controller = require('../controllers/locationController')
+const tag_controller = require('../controllers/tagController')
 
 // Display index of site
 exports.index = async function(req, res) {
 
   var result = {};
   result.users_result = [];
-  result.posts_result = [];
 
   const client = new Client({
     connectionString: process.env.DATABASE_URL,
@@ -28,18 +28,22 @@ exports.index = async function(req, res) {
 
   try {
     const users = await client.query('SELECT * FROM users ORDER BY username ASC;');
-    const posts = await client.query('SELECT * FROM post ORDER BY post_date DESC;');
+    const posts = await client.query('SELECT * FROM post ORDER BY post_date DESC');
+    const postsTags = await Promise.all(posts.rows.map(async (post) => {
+      let tags = await tag_controller.tagsForPost(post.postid)
+      tags = tags.map(tag => {
+        return tag.tag_text;
+      })
+      return {post: post, tags: tags};
+    }));
     await client.end();
 
     result.users_result = users.rows;
-    result.posts_result = posts.rows;
+    res.render('index', {users: result.users_result, postTag_list: postsTags})
   } catch (e) {
     console.log(e);
     res.render('error', {error: e});
   }
-
-  res.render('index', {users: result.users_result, posts: result.posts_result})
-
 };
 
 // Display list of all Users.
