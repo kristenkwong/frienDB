@@ -87,6 +87,13 @@ function userAge(date) {
 // Display detail page for a specific User.
 exports.user_detail = async function(req, res) {
 
+  if (typeof localStorage === "undefined" || localStorage === null) {
+    var LocalStorage = require('node-localstorage').LocalStorage;
+    localStorage = new LocalStorage('./scratch');
+  }
+
+  const curr_user = await localStorage.getItem('user');
+
   var result = {};
   result.user_result = [];
   result.posts_result = [];
@@ -101,6 +108,22 @@ exports.user_detail = async function(req, res) {
   client.connect();
 
   try {
+
+    const sql_friends = 'SELECT * FROM friends_with WHERE (username_1= $1 AND username_2=$2) OR (username_1=$3 AND username_2=$4);'
+    const params_friends = [curr_user, req.params.id, req.params.id, curr_user];
+
+    var friends_flag = await client.query(sql_friends, params_friends);
+
+    if (friends_flag.rowCount != 0) {
+      friends_flag = 1;
+    } else {
+      friends_flag = 0;
+    }
+
+    console.log(friends_flag)
+
+
+
     const sql_user = 'SELECT * FROM users WHERE username = $1;';
     const sql_posts = 'SELECT * FROM post WHERE username = $1;';
     const params = [req.params.id];
@@ -122,7 +145,7 @@ exports.user_detail = async function(req, res) {
     console.log(e);
   }
 
-  res.render('user_detail', {title: req.params.id, user: result.user_result, birthday: birthday(result.user_result.birthdate), age: userAge(result.user_result.birthdate), posts: result.posts_result});
+  res.render('user_detail', {title: req.params.id, user: result.user_result, birthday: birthday(result.user_result.birthdate), age: userAge(result.user_result.birthdate), posts: result.posts_result, curr_user: curr_user, friends_flag: friends_flag});
 
 };
 
@@ -404,3 +427,60 @@ exports.user_update_post = [
   }
 
 ];
+
+// use ID to create tuple in friends_with table
+exports.user_addfriend = async function (req, res) {
+
+  if (typeof localStorage === "undefined" || localStorage === null) {
+    var LocalStorage = require('node-localstorage').LocalStorage;
+    localStorage = new LocalStorage('./scratch');
+  }
+
+  const curr_user = localStorage.getItem('user');
+  console.log(curr_user);
+
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
+
+  try {
+    await client.connect();
+
+    const sql = 'INSERT INTO friends_with VALUES ($1, $2)';
+    const params = [curr_user, req.params.id]
+    await client.query(sql, params);
+    res.redirect('/home/user/' + req.params.id)
+  } catch (err) {
+    res.render('error', {error: err})
+  }
+
+}
+
+// use ID to remove tuple in friends_with table
+exports.user_removefriend = async function (req, res) {
+
+  if (typeof localStorage === "undefined" || localStorage === null) {
+    var LocalStorage = require('node-localstorage').LocalStorage;
+    localStorage = new LocalStorage('./scratch');
+  }
+
+  const curr_user = localStorage.getItem('user');
+
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
+
+  try {
+    await client.connect();
+
+    const sql = 'DELETE FROM friends_with WHERE (username_1=$1 AND username_2=$2) or (username_1=$3 AND username_2=$4);';
+    const params = [curr_user, req.params.id, req.params.id, curr_user]
+    await client.query(sql, params);
+    res.redirect('/home/user/' + req.params.id)
+  } catch (err) {
+    res.render('error', {error: err})
+  }
+
+}

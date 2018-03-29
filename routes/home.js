@@ -14,6 +14,18 @@ var login_controller = require('../controllers/loginController');
 // GET home page
 router.get('/', user_controller.index);
 
+/// ADMIN PAGES ///
+
+// GET request for Admin page
+router.get('/user/admin', function (req, res) {
+  res.render('admin');
+});
+
+// POST request for Admin page
+router.post('/user/admin', function (req, res) {
+  res.render('admin');
+});
+
 // GET request for creating a user.
 // NOTE: this must come before routes that display the Book since this uses the id.
 router.get('/user/create', user_controller.user_create_get);
@@ -38,6 +50,12 @@ router.get('/user/:id', user_controller.user_detail);
 
 // GET request for list of users.
 router.get('/users', user_controller.user_list);
+
+// GEt request for adding user as friend
+router.get('/user/:id/add-friend', user_controller.user_addfriend);
+
+// GET request for adding user as friend
+router.get('/user/:id/remove-friend', user_controller.user_removefriend); 
 
 /// TAG ROUTES ///
 
@@ -90,6 +108,9 @@ router.get('/post/:id', post_controller.post_detail);
 
 // GET request for list of post.
 router.get('/posts', post_controller.post_list);
+
+// POST request for adding user as friend
+router.get('/user/:id/like-post', post_controller.post_like);
 
 /// LOCATION ROUTES ///
 
@@ -193,7 +214,6 @@ router.get('/logout', login_controller.logout_get);
 
 // GET request for Logout
 router.post('/logout', login_controller.logout_post);
-
 
 
 module.exports = router;
