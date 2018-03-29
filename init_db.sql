@@ -153,5 +153,36 @@ INSERT INTO tagged (tag_text, postid) VALUES ('tgif', 2);
 
 INSERT INTO tagged (tag_text, postid) VALUES ('funny', 2);
 
+INSERT INTO friends_with (username_1, username_2) VALUES ('kristen', 'gerald');
+
+INSERT INTO friends_with (username_1, username_2) VALUES ('victor', 'anthea');
+
+INSERT INTO friends_with (username_1, username_2) VALUES ('victor', 'gerald');
+
+INSERT INTO friends_with (username_1, username_2) VALUES ('gwendolyn', 'anthea');
+
+INSERT INTO tag (tag_text) VALUES ('vancity');
+
+INSERT INTO tag (tag_text) VALUES ('cats');
+
+INSERT INTO tag (tag_text) VALUES ('image');
+
+INSERT INTO tag (tag_text) VALUES ('girlpower');
+
+INSERT INTO tag (tag_text) VALUES ('lol');
+
+INSERT INTO tagged (tag_text, postid) VALUES ('cats', 2);
+
+INSERT INTO tagged (tag_text, postid) VALUES ('lol', 2);
+
+INSERT INTO tagged (tag_text, postid) VALUES ('image', 2);
+
+INSERT INTO tagged (tag_text, postid) VALUES ('lol', 3);
+
+INSERT INTO tagged (tag_text, postid) VALUES ('image', 3);
+
+INSERT INTO tagged (tag_text, postid) VALUES ('lol', 4);
+
+INSERT INTO tagged (tag_text, postid) VALUES ('lol', 5);
 
 /* TODO INSERT MORE TUPLES */

@@ -35,8 +35,19 @@ block content
 
   hr
 
-  p
-    a(href="/home/user/" + user.username + "/delete") delete user @#{user.username}
+  if curr_user == user.username || curr_user == 'admin'
+    p
+      a(href="/home/user/" + user.username + "/delete") delete user @#{user.username}
+    p
+      a(href="/home/user/" + user.username + "/update") edit user information
 
-  p
-    a(href="/home/user/" + user.username + "/update") edit user information
+  if curr_user && curr_user != user.username && curr_user != 'admin' && !friends_flag
+    p
+      a(href="/home/user/" + user.username + "/add-friend") add friend
+      if error_friend
+        #{error.message}
+
+  if friends_flag
+    p ✔️ Already friends!
+      sub
+        a(href="/home/user/" + user.username + "/remove-friend") remove friend 😢

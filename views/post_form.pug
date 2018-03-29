@@ -30,8 +30,18 @@ block content
       label(for='Tags') Tags:
       input#text.form-control(type='text', name='tags', required='false', value='')
 
-      h3 This is temporary until we figure out how to log in:
-      label(for="username") User:
-      input#text.form-control(type='text', name='username', required='true', value=(undefined===post ? '' : post.username))
+      if (curr_user == 'admin')
+        h3 Super duper special admin privileges:
+        label(for="username") User:
+        input#text.form-control(type='text', name='username', required='true', value=(undefined===post ? '' : post.username))
+        br
+        button.btn.btn-primary(type='submit') Post it!
 
-    button.btn.btn-primary(type='submit') Post it!
+      else if curr_user
+        h4 You're posting as @#{curr_user}
+        button.btn.btn-primary(type='submit') Post it!
+
+      else
+        h4 You're not logged in!
+        p
+          a(href='/home/login') Log in here.

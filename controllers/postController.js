@@ -64,7 +64,15 @@ exports.post_detail = async function(req, res) {
 
 // Display Post create form on GET
 exports.post_create_get = function(req, res) {
-  res.render('post_form', {title: 'Create New Post'});
+
+  if (typeof localStorage === "undefined" || localStorage === null) {
+    var LocalStorage = require('node-localstorage').LocalStorage;
+    localStorage = new LocalStorage('./scratch');
+  }
+
+  const curr_user = localStorage.getItem('user');
+
+  res.render('post_form', {title: 'Create New Post', curr_user: curr_user});
 };
 
 // Return true if the location tuple already exists in the location table
@@ -115,8 +123,7 @@ async function checkIfLocationExists2(res, city, country) {
 exports.post_create_post = [
 
   // Validate fields
-  body('username').isLength({min:1}).trim().withMessage('Username is required.'),
-  body('text').isLength({min:1}).trim().withMessage('Text is required.'),
+  //body('text').isLength({min:1}).trim().withMessage('Text is required.'),
 
   // Sanitize fields
   sanitizeBody('user').trim().escape(),
@@ -126,6 +133,14 @@ exports.post_create_post = [
   sanitizeBody('tags').trim().escape(),
 
   async (req, res, next) => {
+
+    if (typeof localStorage === "undefined" || localStorage === null) {
+      var LocalStorage = require('node-localstorage').LocalStorage;
+      localStorage = new LocalStorage('./scratch');
+    }
+
+    const curr_user = localStorage.getItem('user');
+
     // Extract the validation errors from a request
     const errors = validationResult(req);
 
@@ -134,7 +149,7 @@ exports.post_create_post = [
 
     if (!errors.isEmpty()) {
       // There are errors. Render form again with sanitized values/error messages.
-      res.render('post_form', {title: 'Create New Post', post: req.body, errors: errors.array()});
+      res.render('post_form', {title: 'Create New Post', curr_user: curr_user, post: req.body, errors: errors.array()});
       return;
     }
     else {
@@ -142,7 +157,7 @@ exports.post_create_post = [
       try {
 
         if ((req.body.city == '' || req.body.city == '') && ((req.body.city == '' && req.body.city == '') != true)) {
-          res.render('post_form', {title: 'Create New Post', post: req.body, db_error: 'If you choose to use a location, you must input both a city and a country'});
+          res.render('post_form', {title: 'Create New Post', post: req.body, db_error: 'If you choose to use a location, you must input both a city and a country', curr_user: curr_user});
         }
 
         const client = new Client({
@@ -155,7 +170,14 @@ exports.post_create_post = [
         const sql = 'INSERT INTO post (username, post_date, text, image_link, city, country) VALUES ($1, $2, $3, $4, $5, $6);';
         var today = new Date().toISOString().slice(0, 19).replace('T', ' ');
         console.log(today);
-        const params = [req.body.username, today, req.body.text, req.body.image, req.body.city, req.body.country];
+
+        var params = [];
+
+        if (curr_user == 'admin') { //if admin, get the username from the form
+          params = [req.body.username, today, req.body.text, req.body.image, req.body.city, req.body.country];
+        } else { //if not admin, get currently logged in user
+          params = [curr_user, today, req.body.text, req.body.image, req.body.city, req.body.country];
+        }
 
         for (i = 0; i < params.length; i++) {
           if (params[i] == '') {
@@ -172,7 +194,7 @@ exports.post_create_post = [
 
         results.post_result = post.rows;
       } catch (e) {
-        res.render('post_form', {title: 'Create New Post', post: req.body, db_error: e});
+        res.render('post_form', {title: 'Create New Post', post: req.body, db_error: e, curr_user: curr_user});
         console.log(e);
       }
 
@@ -241,3 +263,9 @@ exports.post_update_post = function(req, res) {
   // TODO this isn't done yet
   res.redirect('/home/post/' + req.params.id)
 };
+
+// use ID to create tuple in friends_with table
+exports.post_like = async function (req, res) {
+  //TODO
+  
+}

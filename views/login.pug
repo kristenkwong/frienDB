@@ -4,12 +4,24 @@ block content
 
   h1= title
 
-  form(method='POST' action='')
-    div.form-group
-      label(form='username') Username:
-      input#text.form-control(type='text', name='username', required='true', value=(undefined===user ? '' : user.username))
+  if error
+    p #[strong ERROR!]
+    p #{error.message}
 
-      label(form='password') Password:
-      input#text.form-control(type='password', name='password', require='true', value=(undefined===user ? '' : user.username))
+  if curr_user
+    h4 You're currently logged in as @
+      a(href='/home/user/' + curr_user) #{curr_user}
+    form(method='POST' action='')
+      div.form-group
+      button.btn.btn-primary(type='submit' formaction='/home/logout') Click here to log out
 
-    button.btn.btn-primary(type='submit') Log me in!
+  else
+    form(method='POST' action='')
+      div.form-group
+        label(form='username') Username:
+        input#username.form-control(type='text', name='username', required='true', value=(undefined===user ? '' : user.username))
+
+        label(form='password') Password:
+        input#password.form-control(type='password', name='password', require='true', value=(undefined===user ? '' : user.username))
+
+      button.btn.btn-primary(type='submit') Log me in!
