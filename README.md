@@ -2,9 +2,9 @@
 
 ### ⭐️⭐️ CLICK [HERE](https://friendb.herokuapp.com/) TO SEE OUR APP IN ACTION ⭐️⭐️ ###
 
-<img align='right' width='100' height='100' src='https://github.com/kristenkwong/frienDB/blob/master/public/images/preview.gif?raw=true'>'
-
 FrienDB is a simple web application, simulating a social media service, running on Heroku with the Postgres add-on.
+
+<img align='right' width='600' height='100' src='https://github.com/kristenkwong/frienDB/blob/master/public/images/preview.gif?raw=true'>
 
 Our application contains:
 * A home page, listing all users and posts with their content.
