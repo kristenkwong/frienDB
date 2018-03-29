@@ -26,14 +26,14 @@ block content
 
   hr
 
-  if curr_user && curr_user != 'admin'
-    if (curr_user === post.username)
+  if curr_user
+    if (curr_user === post.username) || curr_user == 'admin'
       p
         a(href='/home/post/' + post.postid + '/edit') edit post
       p
         a(href='/home/post/' + post.postid + '/delete') delete post
 
-    if liked_flag == true
+    if liked_flag == true && curr_user != admin
       p
         a(href='/home/post/' + post.postid + '/unlike') 👎 unlike post
     else
