@@ -161,7 +161,7 @@ INSERT INTO tag (tag_text) VALUES ('girlpower');
 
 INSERT INTO tag (tag_text) VALUES ('lol');
 
-INSERT INTO tagged (tag_text, postid) VALUES ('cat', 2);
+INSERT INTO tagged (tag_text, postid) VALUES ('cats', 2);
 
 INSERT INTO tagged (tag_text, postid) VALUES ('lol', 2);
 
