@@ -31,7 +31,7 @@ exports.index = async function(req, res) {
     const users = await client.query('SELECT * FROM users ORDER BY username ASC;');
     const posts = await client.query('SELECT * FROM post ORDER BY post_date DESC');
     const postsTags = await Promise.all(posts.rows.map(async (post) => {
-      let tags = await tag_controller.tagsForPost(post.postid)
+      let tags = await tag_controller.tagsForPost(client, post.postid)
       tags = tags.map(tag => {
         return tag.tag_text;
       })

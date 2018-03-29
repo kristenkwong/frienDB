@@ -20,20 +20,32 @@ exports.tag_list = async function(req, res) {
   }
 };
 
-exports.tagsForPost = async function (postID) {
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: true
-  });
-
-  client.connect();
+exports.tagsForPost = async function (client, postID) {
+  // const client = new Client({
+  //   connectionString: process.env.DATABASE_URL,
+  //   ssl: true
+  // });
+  //
+  // client.connect();
 
   try {
     const tags = await client.query('SELECT * FROM tagged WHERE postid = ' + postID + ';');
-    await client.end();
+    // await client.end();
     return tags.rows;
   } catch(e) {
     return [];
+  }
+}
+
+exports.tagExists = async function (client, text) {
+  try {
+    const tag = await client.query('SELECT * FROM tag WHERE tag_text = $1;', [text]);
+    console.log("tags:: ");
+    console.log(tag.rows);
+    return tag.rows.length !== 0;
+  } catch(e) {
+    console.log(e);
+    return false;
   }
 }
 

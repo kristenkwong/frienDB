@@ -20,12 +20,14 @@ exports.post_list = async function(req, res) {
   try {
     const posts = await client.query('SELECT * FROM post ORDER BY post_date DESC');
     const postsTags = await Promise.all(posts.rows.map(async (post) => {
-      let tags = await tag_controller.tagsForPost(post.postid)
+      let tags = await tag_controller.tagsForPost(client, post.postid)
       tags = tags.map(tag => {
         return tag.tag_text;
       })
       return {post: post, tags: tags};
-    }));
+    })).catch(error => {
+      console.log(error);
+    });
     await client.end();
     res.render('post_list', {title: 'Post List', postTag_list: postsTags})
   } catch(e) {
@@ -104,11 +106,10 @@ exports.post_detail = async function(req, res) {
   try {
     const liked_flag = await post_liked(req, res, req.params.id)
     const post = await client.query('SELECT * FROM post WHERE postid = $1 ORDER BY post_date ASC', [req.params.id]);
-    let tags = await tag_controller.tagsForPost(post.rows[0].postid);
+    let tags = await tag_controller.tagsForPost(client, post.rows[0].postid);
     tags = tags.map(tag => {
       return tag.tag_text;
     })
-    console.log(tags);
     await client.end();
     res.render('post_detail', {title: 'Post id ' + req.params.id, post: post.rows[0], tags: tags, date: niceDate(post.rows[0].post_date), curr_user: curr_user, liked_flag: liked_flag, likers: likers})
   } catch(e) {
@@ -222,7 +223,7 @@ exports.post_create_post = [
 
         client.connect();
 
-        const sql = 'INSERT INTO post (username, post_date, text, image_link, city, country) VALUES ($1, $2, $3, $4, $5, $6);';
+        const postSql = 'INSERT INTO post (username, post_date, text, image_link, city, country) VALUES ($1, $2, $3, $4, $5, $6) RETURNING postid;';
         var today = new Date().toISOString().slice(0, 19).replace('T', ' ');
         console.log(today);
 
@@ -244,10 +245,37 @@ exports.post_create_post = [
           await location_controller.checkIfLocationExists(res, params[4], params[5]);
         }
 
-        const post = await client.query(sql, params);
-        await client.end();
+        let tags = req.body.tags.split(",");
+        tags = tags.map(tag => {
+          return tag.trim();
+        }).filter(tag => {
+          return tag !== '';
+        })
 
-        results.post_result = post.rows;
+        console.log(tags);
+
+        const post = client.query(postSql, params, async function (err, result) {
+          if (err) {
+            console.log("ERROR: " + err);
+          }
+          else {
+            const tagQuery = await Promise.all(tags.map(async (tag) => {
+              const tagExists = await tag_controller.tagExists(client, tag);
+              console.log(tagExists);
+              if (!tagExists) {
+                const insertTagSql = await client.query('INSERT into tag (tag_text) VALUES ($1)', [tag]);
+              }
+              const taggedSql = 'INSERT INTO tagged (tag_text, postid) VALUES ($1, $2);';
+              const tagParams = [tag, result.rows[0].postid];
+              console.log(tag);
+              console.log(tagParams);
+              return client.query(taggedSql, tagParams);
+            }))
+
+            await client.end();
+          }
+        });
+
       } catch (e) {
         res.render('post_form', {title: 'Create New Post', post: req.body, db_error: e, curr_user: curr_user});
         console.log(e);
