@@ -1,6 +1,11 @@
 doctype html
 html(lang='en')
   head
+    script.
+      if (typeof localStorage === "undefined" || localStorage === null) {
+        var LocalStorage = require('node-localstorage').LocalStorage;
+        localStorage = new LocalStorage('./scratch');
+      }
     title= title
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1')
@@ -26,8 +31,18 @@ html(lang='en')
                 a(href='/home/locations') All locations
               li
                 hr
-              //li
-                //a(href='/home/login') Log in
+              li
+                //script.
+                  $(function(){
+                    $('#user span').text(localStorage.getItem('user'))
+                  });
+                //div(id="user")
+                  p Logged in as: @
+                    span user
+              li
+                a(href='/home/login') Log in
+              li
+                a(href='/home/logout') Log out
               li
                 a(href='/home/user/create') Create new user
               li

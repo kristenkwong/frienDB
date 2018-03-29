@@ -1,0 +1,23 @@
+extends layout
+
+block content
+
+  h1= title
+
+  if error
+    p #[strong ERROR!]
+    p #{error.message}
+
+  if curr_user
+    h4 You're currently logged in as @
+      a(href='/home/user/' + curr_user) #{curr_user}
+
+    form(method='POST' action='')
+      div.form-group
+      button.btn.btn-primary(type='submit') Log me out
+
+  else
+    p You're not logged in!
+    form(method='GET' action='')
+      div.form-group
+      button.btn.btn-primary(type='submit' formaction='/home/login') Login here

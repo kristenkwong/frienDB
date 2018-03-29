@@ -7,6 +7,7 @@ var post_controller = require('../controllers/postController');
 var tag_controller = require('../controllers/tagController');
 var location_controller = require('../controllers/locationController');
 var query_controller = require('../controllers/queryController');
+var login_controller = require('../controllers/loginController');
 
 /// USER ROUTES ///
 
@@ -177,6 +178,21 @@ router.get('/update', query_controller.update_get);
 
 // POST request for Update
 router.get('/update', query_controller.update_post);
+
+
+/// LOGIN CONTROLLER ///
+
+// GET request for Login
+router.get('/login', login_controller.login_get);
+
+// GET request for Login
+router.post('/login', login_controller.login_post);
+
+// GET request for Logout
+router.get('/logout', login_controller.logout_get);
+
+// GET request for Logout
+router.post('/logout', login_controller.logout_post);
 
 
 
