@@ -11,11 +11,12 @@ exports.tag_list = async function(req, res) {
   client.connect();
 
   try {
-    const tags = await client.query('SELECT * FROM tag');
+    const tags = await client.query('SELECT * FROM tag ORDER BY tag_text ASC');
     await client.end();
     console.log(tags);
     res.render('tag_list', {title: 'Tag List', tag_list: tags.rows})
   } catch(e) {
+    console.log(e);
     res.render('error', {error: e})
   }
 };

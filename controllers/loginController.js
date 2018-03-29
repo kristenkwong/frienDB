@@ -70,10 +70,12 @@ exports.login_post = async function(req, res) {
 
         res.render('logout', {title: "You're logged in!", curr_user: localStorage.getItem('user')});
       } else {
+        await client.end();
         throw new Error('Password or username is invalid, please try again');
       }
 
     } catch (err) {
+      await client.end();
       res.render('login', {error: err});
     }
   }

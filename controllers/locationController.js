@@ -81,7 +81,6 @@ exports.checkIfLocationExists = async function (res, city, country) {
       result.location_set = await client.query(sql, params);
       console.log("Inserted tuple: ", result.location_set.rows)
     }
-
     await client.end();
   } catch (e) {
     res.render('error', {error: e});

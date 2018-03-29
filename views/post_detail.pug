@@ -26,7 +26,7 @@ block content
 
   hr
 
-  if curr_user
+  if curr_user && curr_user != 'admin'
     if (curr_user === post.username)
       p
         a(href='/home/post/' + post.postid + '/edit') edit post
