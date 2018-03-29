@@ -25,6 +25,10 @@ block content
       input#text.form-control(type='text', name='city', value=(undefined===post ? '' : post.city))
       label(for='Country') Country:
       input#text.form-control(type='text', name='country', value=(undefined===post ? '' : post.country))
+        
+      h3 Tags:
+      label(for='Tags') Tags:
+      input#text.form-control(type='text', name='tags', required='false', value='')
 
       h3 This is temporary until we figure out how to log in:
       label(for="username") User:

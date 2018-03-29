@@ -14,10 +14,15 @@ block content
   else if (post.country)
     p #[strong Posted from: ] #{post.country}
 
+
   if (post.image_link)
     img(src=post.image_link)
   if (post.text)
     p #{post.text}
+  if (tags.length > 0) 
+    p #{tags.join(', ')}
+    
+  
 
   hr
 

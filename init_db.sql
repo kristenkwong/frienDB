@@ -143,5 +143,15 @@ INSERT INTO friends_with (username_1, username_2) VALUES ('kristen', 'victor');
 
 INSERT INTO friends_with (username_1, username_2) VALUES ('kristen', 'anthea');
 
+INSERT INTO tag (tag_text) VALUES ('tgif');
+
+INSERT INTO tag (tag_text) VALUES ('funny');
+
+INSERT INTO tagged (tag_text, postid) VALUES ('tgif', 1);
+
+INSERT INTO tagged (tag_text, postid) VALUES ('tgif', 2);
+
+INSERT INTO tagged (tag_text, postid) VALUES ('funny', 2);
+
 
 /* TODO INSERT MORE TUPLES */

@@ -1,7 +1,41 @@
+const {Client} = require('pg'); //newer version of Javascript to get the client
+
 // Display list of all Tags.
-exports.tag_list = function(req, res) {
-  res.send('NOT IMPLEMENTED: Tag list GET')
+exports.tag_list = async function(req, res) {
+
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
+
+  client.connect();
+
+  try {
+    const tags = await client.query('SELECT * FROM tag');
+    await client.end();
+    console.log(tags);
+    res.render('tag_list', {title: 'Tag List', tag_list: tags.rows})
+  } catch(e) {
+    res.render('error', {error: e})
+  }
 };
+
+exports.tagsForPost = async function (postID) {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
+
+  client.connect();
+
+  try {
+    const tags = await client.query('SELECT * FROM tagged WHERE postid = ' + postID + ';');
+    await client.end();
+    return tags.rows;
+  } catch(e) {
+    return [];
+  }
+}
 
 // Display detail page for a specific Tag.
 exports.tag_detail = function(req, res) {

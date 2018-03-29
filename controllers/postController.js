@@ -4,6 +4,7 @@ const {Client} = require('pg'); //newer version of Javascript to get the client
 
 var moment = require('moment');
 const location_controller = require('../controllers/locationController')
+const tag_controller = require('../controllers/tagController')
 
 // Display list of all Post.
 exports.post_list = async function(req, res) {
@@ -17,8 +18,15 @@ exports.post_list = async function(req, res) {
 
   try {
     const posts = await client.query('SELECT * FROM post ORDER BY post_date DESC');
+    const postsTags = await Promise.all(posts.rows.map(async (post) => {
+      let tags = await tag_controller.tagsForPost(post.postid)
+      tags = tags.map(tag => {
+        return tag.tag_text;
+      })
+      return {post: post, tags: tags};
+    }));
     await client.end();
-    res.render('post_list', {title: 'Post List', post_list: posts.rows})
+    res.render('post_list', {title: 'Post List', postTag_list: postsTags})
   } catch(e) {
     res.render('error', {error: e})
   }
@@ -38,18 +46,19 @@ exports.post_detail = async function(req, res) {
     ssl: true
   });
 
-  client.connect()
-    .then(() => {
-      console.log('connection complete');
-      const sql = 'SELECT * FROM post WHERE postid = $1 ORDER BY post_date ASC';
-      const params = [req.params.id];
-      return client.query(sql, params);
+  client.connect();
+  try {
+    const post = await client.query('SELECT * FROM post WHERE postid = $1 ORDER BY post_date ASC', [req.params.id]);
+    let tags = await tag_controller.tagsForPost(post.rows[0].postid);
+    tags = tags.map(tag => {
+      return tag.tag_text;
     })
-    .then((results) => {
-      console.log("results?", results)
-      client.end();
-      res.render('post_detail', {title: 'Post id ' + req.body.id, post: results.rows[0], date: niceDate(results.rows[0].post_date)})
-    })
+    console.log(tags);
+    await client.end();
+    res.render('post_detail', {title: 'Post id ' + req.params.id, post: post.rows[0], tags: tags, date: niceDate(post.rows[0].post_date)})
+  } catch(e) {
+    res.render('error', {error: e})
+  }
 
 };
 
@@ -114,6 +123,7 @@ exports.post_create_post = [
   sanitizeBody('text').trim(),
   sanitizeBody('city').trim().escape(),
   sanitizeBody('country').trim().escape(),
+  sanitizeBody('tags').trim().escape(),
 
   async (req, res, next) => {
     // Extract the validation errors from a request
