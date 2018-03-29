@@ -100,6 +100,10 @@ INSERT INTO location VALUES (
 );
 
 INSERT INTO users VALUES (
+  'milton', 'password', 'Milton', 'Leung', 'Male', '1996-11-12', 'Vancouver', 'Canada', 'Vancouver', 'Canada'
+);
+
+INSERT INTO users VALUES (
   'kristen', 'hello', 'Kristen', 'Kwong', 'Female', '1997-02-05', 'Richmond', 'Canada', 'Vancouver', 'Canada'
 );
 
@@ -117,6 +121,22 @@ INSERT INTO users VALUES (
 
 INSERT INTO users VALUES (
   'gwendolyn', 'nonono', 'Gwendolyn', 'Tang', 'Female', '2017-09-27', 'San Francisco', 'California', 'San Francisco', 'California'
+);
+
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'gerald', '2018-03-23', null, 'This is a post from Tokyo.', 'Tokyo', 'Japan'
+);
+
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'gwendolyn', '2018-03-23', null, 'This is a post from Tokyo.', 'Tokyo', 'Japan'
+);
+
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'kristen', '2018-03-23', null, 'This is a post from Tokyo.', 'Tokyo', 'Japan'
+);
+
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'victor', '2018-03-23', null, 'This is a post from Tokyo.', 'Tokyo', 'Japan'
 );
 
 INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
@@ -144,6 +164,26 @@ INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
 );
 
 INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'milton', '2018-03-23', null, 'This is a post from Tokyo.', 'Tokyo', 'Japan'
+);
+
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'milton', '2018-03-23', null, 'This is a post from Richmond.', 'Richmond', 'Canada'
+);
+
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'milton', '2018-03-23', null, 'This is a post from Vancouver.', 'Vancouver', 'Canada'
+);
+
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'milton', '2018-03-23', null, 'This is a post from San Francisco.', 'San Francisco', 'California'
+);
+
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'milton', '2018-03-23', null, 'This is a post from Hong Kong.', 'Hong Kong', 'Hong Kong'
+);
+
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
   'kristen', '2018-03-22', 'http://www.top13.net/wp-content/uploads/2015/10/perfectly-timed-funny-cat-pictures-5.jpg', null, 'Richmond', 'Canada'
 );
 
@@ -164,7 +204,7 @@ INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
 );
 
 INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
-  'gerald', '2018-03-28 22:15:23', 'https://78.media.tumblr.com/16a8fceed0810ee4b777709004479b90/tumblr_o273vcaVGV1rrqh9xo1_500.gif', 'this aint random', 'Richmond', 'Canada'
+  'gerald', '2018-03-28 22:15:23', 'https://i.amz.mshcdn.com/KSIKForSa0-RcMkajDRZ7-m6Neo=/1200x627/2014%2F12%2F01%2F71%2Fpug.a6b6a.jpg', 'pug bath', 'Richmond', 'Canada'
 );
 
 INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
@@ -228,5 +268,3 @@ INSERT INTO likes (username, postid) VALUES ('kristen', 4);
 INSERT INTO likes (username, postid) VALUES ('kristen', 5);
 
 INSERT INTO likes (username, postid) VALUES ('kristen', 1);
-
-/* TODO INSERT MORE TUPLES */

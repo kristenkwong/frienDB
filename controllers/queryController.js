@@ -135,6 +135,7 @@ exports.aggregation_get = function (req, res) {
 }
 
 exports.aggregation_post_count = async function (req, res) {
+  console.log('hi')
   var count_result = [];
 
   const client = new Client({

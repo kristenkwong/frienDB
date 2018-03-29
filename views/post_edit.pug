@@ -18,7 +18,7 @@ block content
       input#text.form-control(type='text', name='text', value=(undefined===post ? '' : post.text))
 
       label(for='image') Image link:
-      input#text.form-control(type='url', name='image', value='https://')
+      input#text.form-control(type='url', name='image', value=(undefined===post ? 'https://' : post.image_link))
 
       h3 Location:
       label(for='City') City:
@@ -35,11 +35,11 @@ block content
         label(for="username") User:
         input#text.form-control(type='text', name='username', required='true', value=(undefined===post ? '' : post.username))
         br
-        button.btn.btn-primary(type='submit') Post it!
+        button.btn.btn-primary(type='submit') Update post
 
       else if curr_user
         h4 You're posting as @#{curr_user}
-        button.btn.btn-primary(type='submit') Post it!
+        button.btn.btn-primary(type='submit') Update post
 
       else
         h4 You're not logged in!

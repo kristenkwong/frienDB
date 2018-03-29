@@ -56,9 +56,16 @@ exports.login_post = async function(req, res) {
       const params = [req.body.username]
 
       var result = await client.query(sql, params);
+      await client.end();
       console.log(result);
 
-      if (result.rows[0].password === req.body.password) {
+      console.log(result.rowCount);
+
+      if (result.rowCount === 0) {
+        throw new Error('User does not exist!');
+      }
+
+      else if (result.rows[0].password === req.body.password) {
 
         if (typeof localStorage === "undefined" || localStorage === null) {
           var LocalStorage = require('node-localstorage').LocalStorage;
@@ -66,22 +73,17 @@ exports.login_post = async function(req, res) {
         }
 
         localStorage.setItem('user', req.body.username);
-        await client.end();
+        console.log("setting user", localStorage.getItem('user'));
 
         res.render('logout', {title: "You're logged in!", curr_user: localStorage.getItem('user')});
-      } else {
-        await client.end();
-        throw new Error('Password or username is invalid, please try again');
-      }
-
-    } catch (err) {
-      await client.end();
-      res.render('login', {error: err});
+    } else {
+      throw new Error('Password or username is invalid, please try again');
     }
+
+  } catch (err) {
+    res.render('login', {error: err});
   }
-
-
-}
+}}
 
 exports.logout_get = function(req, res) {
 

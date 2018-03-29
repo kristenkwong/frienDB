@@ -5,7 +5,8 @@ block content
 
   ul
   each tag in tag_list
-    li #{tag.tag_text}
+    li
+      a(href='/home/tag/' + tag.tag_text) ##{tag.tag_text}
 
   else
     li There are no tags.

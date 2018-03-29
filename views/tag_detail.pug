@@ -1,0 +1,15 @@
+extends layout
+
+block content
+
+  h1= title
+
+  each post in posts
+    hr
+    h4
+      a(href="/home/post/" + post.postid) Post by @#{post.username}
+    p #{post.post_date}
+    if (post.image_link)
+      img(src=post.image_link width=500)
+    if (post.text)
+      p #{post.text}

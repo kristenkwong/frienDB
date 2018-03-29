@@ -59,24 +59,6 @@ router.get('/user/:id/remove-friend', user_controller.user_removefriend);
 
 /// TAG ROUTES ///
 
-// GET request for creating a tag.
-router.get('/tag/create', tag_controller.tag_create_get);
-
-// POST request for creating a tag.
-router.post('/tag/create', tag_controller.tag_create_post);
-
-// GET request to delete tag.
-router.get('/tag/:id/delete', tag_controller.tag_delete_get);
-
-// POST request to delete tag.
-router.post('/tag/:id/delete', tag_controller.tag_delete_post);
-
-// GET request to update tag.
-router.get('/tag/:id/update', tag_controller.tag_update_get);
-
-// POST request to update tag
-router.post('/tag/:id/update', tag_controller.tag_update_post);
-
 // GET request for one tag
 router.get('/tag/:id', tag_controller.tag_detail);
 
@@ -155,21 +137,17 @@ router.post('/division/locations', function (req, res) {
   res.redirect('/home/division')
 });
 
-// GET request for aggregation avg/min/max function
-router.get('/aggregation/avgminmax', function(req, res) {
-  res.redirect('/home/aggregation');
-});
-
-// GET request for aggregation count function
-router.post('/aggregation/count', function(req, res) {
-  res.redirect('/home/aggregation');
-});
-
 // GET request for Aggregation
 router.get('/aggregation', query_controller.aggregation_get);
 
 // POST request for Aggregation
 //router.post('/aggregation', query_controller.aggregation_post);
+
+// GET request for aggregation avg/min/max function
+router.get('/aggregation/avgminmax', query_controller.aggregation_post_avgminmax);
+
+// GET request for aggregation count function
+router.get('/aggregation/count', query_controller.aggregation_post_count);
 
 // POST request for aggregation avg/min/max function
 router.post('/aggregation/avgminmax', query_controller.aggregation_post_avgminmax);

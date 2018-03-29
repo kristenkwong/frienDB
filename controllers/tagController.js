@@ -43,36 +43,28 @@ exports.tagExists = async function (client, text) {
 }
 
 // Display detail page for a specific Tag.
-exports.tag_detail = function(req, res) {
-  res.send('NOT IMPLEMENTED: Tag detail page: ' + req.params.id);
-};
+exports.tag_detail = async function(req, res) {
 
-// Display Tag create form on GET
-exports.tag_create_get = function(req, res) {
-  res.send('NOT IMPLEMENTED: Tag create GET')
-};
+  var result = {};
+  result.tag_posts = [];
 
-// Handle Tag create for on POST
-exports.tag_create_post = function(req, res) {
-  res.send('NOT IMPLEMENTED: Tag create POST');
-};
+  const client = new Client ({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  });
 
-// Display Tag delete form on GET
-exports.tag_delete_get = function(req,res) {
-  res.send('NOT IMPLEMENTED: Tag delete GET');
-};
+  client.connect();
 
-// Handle Tag delete form on POST
-exports.tag_delete_post = function(req, res) {
-  res.send('NOT IMPLEMENTED: Tag delete POST');
-};
+  try {
+    const sql = 'SELECT * FROM post INNER JOIN tagged ON (post.postid = tagged.postid) WHERE tagged.tag_text = $1';
+    const params = [req.params.id];
+    console.log(sql, params);
+    const tag_posts = await client.query(sql, params);
+    await client.end();
+    result.tag_posts = tag_posts.rows;
+  } catch (err) {
+    res.render('error', {error: err});
+  }
 
-// Display Tag update form on GET
-exports.tag_update_get = function(req, res) {
-  res.send('NOT IMPLEMENTED: Tag update GET');
-};
-
-// Handle Tag update on POST
-exports.tag_update_post = function(req, res) {
-  res.send('NOT IMPLEMENTED: Tag update POST');
+  res.render('tag_detail', {title: 'Tag: ' + req.params.id, posts: result.tag_posts});
 };
