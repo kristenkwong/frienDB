@@ -408,11 +408,11 @@ exports.user_update_post = [
       }
 
       // if location tuples do not exist yet, add them to the table
-      if (params[6] && params[7]) {
-        await location_controller.checkIfLocationExists(res, params[6], params[7]);
+      if (params[5] && params[6]) {
+        await location_controller.checkIfLocationExists(res, params[5], params[6]);
       }
-      if (params[8] && params[9]) {
-        await location_controller.checkIfLocationExists(res, params[8], params[9]);
+      if (params[7] && params[8]) {
+        await location_controller.checkIfLocationExists(res, params[7], params[8]);
       }
 
       await client.query(sql, params);
