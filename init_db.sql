@@ -143,5 +143,36 @@ INSERT INTO friends_with (username_1, username_2) VALUES ('kristen', 'victor');
 
 INSERT INTO friends_with (username_1, username_2) VALUES ('kristen', 'anthea');
 
+INSERT INTO friends_with (username_1, username_2) VALUES ('kristen', 'gerald');
+
+INSERT INTO friends_with (username_1, username_2) VALUES ('victor', 'anthea');
+
+INSERT INTO friends_with (username_1, username_2) VALUES ('victor', 'gerald');
+
+INSERT INTO friends_with (username_1, username_2) VALUES ('gwendolyn', 'anthea');
+
+INSERT INTO tag (tag_text) VALUES ('vancity');
+
+INSERT INTO tag (tag_text) VALUES ('cats');
+
+INSERT INTO tag (tag_text) VALUES ('image');
+
+INSERT INTO tag (tag_text) VALUES ('girlpower');
+
+INSERT INTO tag (tag_text) VALUES ('lol');
+
+INSERT INTO tagged (tag_text, postid) VALUES ('cat', 2);
+
+INSERT INTO tagged (tag_text, postid) VALUES ('lol', 2);
+
+INSERT INTO tagged (tag_text, postid) VALUES ('image', 2);
+
+INSERT INTO tagged (tag_text, postid) VALUES ('lol', 3);
+
+INSERT INTO tagged (tag_text, postid) VALUES ('image', 3);
+
+INSERT INTO tagged (tag_text, postid) VALUES ('lol', 4);
+
+INSERT INTO tagged (tag_text, postid) VALUES ('lol', 5);
 
 /* TODO INSERT MORE TUPLES */
