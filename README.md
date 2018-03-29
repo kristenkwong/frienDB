@@ -2,9 +2,9 @@
 
 ### ⭐️⭐️ CLICK [HERE](https://friendb.herokuapp.com/) TO SEE OUR APP IN ACTION ⭐️⭐️ ###
 
-FrienDB is a simple web application, simulating a social media service, running on Heroku with the Postgres add-on.
-
 <img align='right' width='400' src='https://github.com/kristenkwong/frienDB/blob/master/public/images/preview.gif?raw=true'>
+
+FrienDB is a simple web application, simulating a social media service, running on Heroku with the Postgres add-on.
 
 Our application contains:
 * A home page, listing all users and posts with their content.
@@ -17,3 +17,5 @@ Our application contains:
 **Made with:** Node.js (Express), PostgreSQL, Pug templating hosted on Heroku with the Postgres add-on
 
 This project was made for **CPSC 304 2017W2: Introduction to Relational Databases**.
+
+![queries](https://github.com/kristenkwong/frienDB/blob/master/public/images/queries.gif?raw=true)
