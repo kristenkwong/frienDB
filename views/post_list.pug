@@ -14,7 +14,7 @@ block content
     if (postTag.post.text)
       p #{postTag.post.text}
     if (postTag.tags.length > 0)
-      p #{postTag.tags.join(' ')}
+      p Tags: #{postTag.tags.join(', ')}
 
   else
     li There are no posts.
