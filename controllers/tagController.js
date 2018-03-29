@@ -32,8 +32,10 @@ exports.tagsForPost = async function (postID) {
   try {
     const tags = await client.query('SELECT * FROM tagged WHERE postid = ' + postID + ';');
     await client.end();
+    console.log(tags.rows);
     return tags.rows;
   } catch(e) {
+    console.log(e);
     return [];
   }
 }

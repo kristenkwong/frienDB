@@ -29,6 +29,7 @@ exports.post_list = async function(req, res) {
     await client.end();
     res.render('post_list', {title: 'Post List', postTag_list: postsTags})
   } catch(e) {
+    console.log(e);
     res.render('error', {error: e})
   }
 
@@ -195,6 +196,7 @@ exports.post_create_post = [
     }
 
     const curr_user = localStorage.getItem('user');
+    console.log(curr_user);
 
     // Extract the validation errors from a request
     const errors = validationResult(req);
@@ -205,8 +207,8 @@ exports.post_create_post = [
     if (!errors.isEmpty()) {
       // There are errors. Render form again with sanitized values/error messages.
       res.render('post_form', {title: 'Create New Post', curr_user: curr_user, post: req.body, errors: errors.array()});
-      return;
     }
+
     else {
 
       try {
@@ -219,8 +221,6 @@ exports.post_create_post = [
           connectionString: process.env.DATABASE_URL,
           ssl: true
         });
-
-        client.connect();
 
         const sql = 'INSERT INTO post (username, post_date, text, image_link, city, country) VALUES ($1, $2, $3, $4, $5, $6);';
         var today = new Date().toISOString().slice(0, 19).replace('T', ' ');
@@ -244,13 +244,13 @@ exports.post_create_post = [
           await location_controller.checkIfLocationExists(res, params[4], params[5]);
         }
 
-        const post = await client.query(sql, params);
-        await client.end();
-
+        await client.connect();
+        var post = await client.query(sql, params);
         results.post_result = post.rows;
+        client.end();
       } catch (e) {
-        res.render('post_form', {title: 'Create New Post', post: req.body, db_error: e, curr_user: curr_user});
         console.log(e);
+        res.render('post_form', {title: 'Create New Post', post: req.body, db_error: e, curr_user: curr_user});
       }
 
       res.redirect('/home/posts');
