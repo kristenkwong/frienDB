@@ -11,28 +11,23 @@ exports.tag_list = async function(req, res) {
   client.connect();
 
   try {
-    const tags = await client.query('SELECT * FROM tag');
+    const tags = await client.query('SELECT * FROM tag ORDER BY tag_text ASC');
     await client.end();
     console.log(tags);
     res.render('tag_list', {title: 'Tag List', tag_list: tags.rows})
   } catch(e) {
+    console.log(e);
     res.render('error', {error: e})
   }
 };
 
 exports.tagsForPost = async function (client, postID) {
-  // const client = new Client({
-  //   connectionString: process.env.DATABASE_URL,
-  //   ssl: true
-  // });
-  //
-  // client.connect();
 
   try {
     const tags = await client.query('SELECT * FROM tagged WHERE postid = ' + postID + ';');
-    // await client.end();
     return tags.rows;
   } catch(e) {
+    console.log(e);
     return [];
   }
 }
@@ -40,8 +35,6 @@ exports.tagsForPost = async function (client, postID) {
 exports.tagExists = async function (client, text) {
   try {
     const tag = await client.query('SELECT * FROM tag WHERE tag_text = $1;', [text]);
-    console.log("tags:: ");
-    console.log(tag.rows);
     return tag.rows.length !== 0;
   } catch(e) {
     console.log(e);

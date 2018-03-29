@@ -148,7 +148,7 @@ INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
 );
 
 INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
-  'victor', '2018-03-24 09:12:01 -8:00', 'https://www.theflyer.com/uploads/image/202141401_202141500/corgi-puppies-for-sale-pembroke-welsh-corgi-202141424_2dbcfcd646e07935_858X617.jpg', 'this is expected to work now', null, null
+  'victor', '2018-03-24 09:12:01 -8:00', 'https://www.theflyer.com/uploads/image/202141401_202141500/corgi-puppies-for-sale-pembroke-welsh-corgi-202141424_2dbcfcd646e07935_858X617.jpg', 'this is expected to work now', 'Richmond', 'Canada'
 );
 
 INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
@@ -156,7 +156,19 @@ INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
 );
 
 INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
-  'anthea', '2018-03-25 22:15:23', 'https://78.media.tumblr.com/fb9b9324fd94c9af5a0a54e2a59d2231/tumblr_ojw2uzUdHf1ug2e72o1_500.jpg', 'kristens mood right now', null, null
+  'anthea', '2018-03-25 22:15:23', 'https://78.media.tumblr.com/fb9b9324fd94c9af5a0a54e2a59d2231/tumblr_ojw2uzUdHf1ug2e72o1_500.jpg', 'kristens mood right now', 'Richmond', 'Canada'
+);
+
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'gwendolyn', '2018-03-28 22:15:23', 'https://i.ytimg.com/vi/mfHKPrgEZrs/maxresdefault.jpg', 'masterpiece', 'Richmond', 'Canada'
+);
+
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'gerald', '2018-03-28 22:15:23', 'https://78.media.tumblr.com/16a8fceed0810ee4b777709004479b90/tumblr_o273vcaVGV1rrqh9xo1_500.gif', 'this aint random', 'Richmond', 'Canada'
+);
+
+INSERT INTO post (username, post_date, image_link, text, city, country) VALUES (
+  'milton', '2018-03-28 22:15:23', 'https://www.gettyimages.ca/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg', 'this aint random', 'Richmond', 'Canada'
 );
 
 INSERT INTO friends_with (username_1, username_2) VALUES ('kristen', 'victor');
